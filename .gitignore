@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+*.ipynb_checkpoints/
+*.log
+*.sqlite
+.DS_Store
+.vscode/
+*.idea/
+# Docker
+*.pid
+*.tar
+*.sock
+*.img
+*.container
