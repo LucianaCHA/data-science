@@ -8,7 +8,4 @@ RUN chmod +x /init.sh
 
 COPY /app /app/
 
-# Copiamos el script desde tu máquina al contenedor
-
-# Comando que se ejecutará al iniciar el contenedor
 # CMD ["python", "script.py"]
