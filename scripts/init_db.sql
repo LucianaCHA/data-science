@@ -1,0 +1,8 @@
+CREATE DATABASE IF NOT EXISTS testdb;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255),
+    apellido VARCHAR(255),
+    edad INT
+);

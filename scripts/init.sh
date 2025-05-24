@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pip install --no-cache-dir python-decouple python-dotenv numpy notebook pandas
+pip install --no-cache-dir python-decouple python-dotenv numpy notebook pandas mysql-connector-python
 
 echo "holas ! Iniciando Jupyter Notebook..."
 
