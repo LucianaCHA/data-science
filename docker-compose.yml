@@ -1,44 +1,14 @@
-version: '3.9'
-
 services:
-  database:
-    image: mysql:8.0
-    container_name: mysql-container
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql # agrgo el script para crear tablas la primera vez que se levanta el conten
-
-  script-runner:
+  notebook:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: lula
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      UNIT_PATH: ${UNIT_PATH}
-    command: ["/init.sh"]
     ports:
       - "8888:8888"
     volumes:
       - ./${UNIT_PATH}:/app
-      - ./scripts/init.sh:/init.sh
+    environment:
+      UNIT_PATH: ${UNIT_PATH}
+    command: ["/init.sh"]
     tty: true
-
-  adminer: # servicio para el adminer de la db
-    image: adminer
-    restart: always
-    ports:
-      - "8080:8080"
-volumes:
-  mysql-data:
-
