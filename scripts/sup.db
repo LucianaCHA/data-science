@@ -1,0 +1,62 @@
+CREATE DATABASE IF NOT EXISTS reto_sup;
+USE reto_sup;
+
+CREATE TABLE IF NOT EXISTS country (
+    id INT,
+    name VARCHAR(50)
+);
+
+INSERT INTO country (id, name) VALUES
+(1, 'Mexico'),
+(2, 'Brasil'),
+(3, 'Colombia'),
+(4, 'Argentina'),
+(5, 'Peru');
+
+CREATE TABLE IF NOT EXISTS seller (
+    id INT,
+    name VARCHAR(50)
+);
+
+INSERT INTO seller (id, name) VALUES
+(1, 'Carlos Lopez'),
+(2, 'Ana Martinez'),
+(3, 'Bruno Souza'),
+(4, 'Fernanda Lima'),
+(5, 'Jorge Torres'),
+(6, 'Luisa Garcia'),
+(7, 'Pedro Suarez'),
+(8, 'Mariana Diaz'),
+(9, 'Sofia Rojas'),
+(10, 'Diego Mendez');
+
+CREATE TABLE IF NOT EXISTS sales (
+    id INT,
+    seller_id INT,
+    country_id INT,
+    amount DOUBLE,
+    customers INT
+);
+
+INSERT INTO sales (id, seller_id, country_id, amount, customers) VALUES
+(1, 1, 1, 50000, 200),
+(2, 2, 1, 45000, 180),
+(3, 3, 2, 60000, 250),
+(4, 4, 2, 70000, 300),
+(5, 5, 3, 30000, 150),
+(6, 6, 3, 25000, 120),
+(7, 7, 4, 20000, 100),
+(8, 8, 4, 22000, 110),
+(9, 9, 5, 28000, 130),
+(10, 10, 5, 26000, 125);
+
+-- 1. Total de clientes por país, ordenado por el monto total en ventas (mayor a menor), 
+
+
+-- 2. Vendedor con mayor valor en ventas, incluyendo su ranking
+
+
+-- 3. Promedio de ventas por vendedor en cada país
+
+
+-- 4. Vendedores con mayor valor en ventas en cada país.

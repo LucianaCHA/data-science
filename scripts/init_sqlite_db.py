@@ -1,7 +1,7 @@
 import sqlite3
 
 # Ajusta el path a la base, por ejemplo: "MO1/L3/sales.db"
-db_path = "sales.db"  # Cambia por el path correcto si hace falta
+db_path = "sales_office.db"  # Cambia por el path correcto si hace falta
 
 # Conexión a la base SQLite
 conn = sqlite3.connect(db_path)
