@@ -1,32 +1,10 @@
-# sqlite3
-# services:
-#   notebook:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     container_name: lula
-#     ports:
-#       - "8888:8888"
-#     volumes:
-#       - ./${UNIT_PATH}:/app
-#     environment:
-#       UNIT_PATH: ${UNIT_PATH}
-#     command: ["/init.sh"]
-#     tty: true
-
-version: '3.9'
-
 services:
   database:
     image: mysql:8.0
     container_name: mysql-container
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    command: >
+    env_file: .env
+    command: > # sacar a otro archivo o ver si funca desde el archivo que crea la base
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
       --log-bin-trust-function-creators=1
@@ -36,25 +14,21 @@ services:
       - mysql-data:/var/lib/mysql
       - "./${DB_PATH}:/docker-entrypoint-initdb.d/init_db.sql"
 
-  script-runner:
+  integrator_project:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: lula
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      UNIT_PATH: ${UNIT_PATH}
+    container_name: integrator_project
+    env_file: .env
     command: ["/init.sh"]
     ports:
       - "8888:8888"
     volumes:
       - ./${UNIT_PATH}:/app
-      - ./scripts/init.sh:/init.sh
+      - ./PI/scripts/init.sh:/init.sh
     tty: true
 
-  adminer: # servicio para el adminer de la db
+  adminer:
     image: adminer
     restart: always
     ports:

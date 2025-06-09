@@ -1,8 +1,6 @@
 #!/bin/bash
 
-pip install --no-cache-dir python-decouple python-dotenv numpy notebook pandas mysql-connector-python tqdm
-
-echo "db lista? ..."
+echo "is db ready? ..."
 python3 - <<EOF
 import time
 import mysql.connector
@@ -30,4 +28,4 @@ python3 /app/scripts/load_data.py
 
 echo "holas ! Iniciando Jupyter Notebook..."
 
-jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --no-browser
+jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --no-browser --NotebookApp.token='1234' --NotebookApp.password='1234'
