@@ -1,0 +1,6 @@
+jupyter
+pandas
+numpy
+python-dotenv
+mysql-connector-python
+python-decouple

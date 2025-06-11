@@ -13,3 +13,7 @@ __pycache__/
 *.sock
 *.img
 *.container
+
+
+PI/data/*
+!PI/data/.keep
