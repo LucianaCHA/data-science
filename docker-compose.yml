@@ -12,7 +12,9 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-      - "./${DB_PATH}:/docker-entrypoint-initdb.d/init_db.sql"
+      - "./${DB_PATH}/01_init_db.sql:/docker-entrypoint-initdb.d/01_init_db.sql"
+      - "./${DB_PATH}/02_init_monitoring_table.sql:/docker-entrypoint-initdb.d/02_init_monitoring_table.sql"
+    tty: true
 
   integrator_project:
     build:

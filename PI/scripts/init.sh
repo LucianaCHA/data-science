@@ -26,6 +26,10 @@ EOF
 echo "populando base con csv..."
 python3 /app/scripts/load_data.py
 
+echo "Creando trigger para monitoreo de ventas..."
+
+python3 /app/scripts/create_trigger.py
+
 echo "holas ! Iniciando Jupyter Notebook..."
 
 jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --no-browser --NotebookApp.token='1234' --NotebookApp.password='1234'
