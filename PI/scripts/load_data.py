@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import mysql.connector
-
 import time
 
 DB_CONFIG = {
@@ -12,7 +11,8 @@ DB_CONFIG = {
 }
 
 DATA_DIR = "/app/data"
-BATCH_SIZE = 10000
+BATCH_SIZE = 100000
+CHUNK_SIZE = 1000000
 
 
 def connect_to_db():
@@ -34,15 +34,12 @@ def insert_table_data(cursor, conn, table_name, df, batch_size=1000):
 
     start_time = time.time()
     df = df.where(pd.notnull(df), None)
-
     cols = ", ".join(df.columns)
     placeholders = ", ".join(["%s"] * len(df.columns))
     sql = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders})"
 
     data = df.to_records(index=False).tolist()
-
-    total_batches = len(data) // batch_size + (
-        1 if len(data) % batch_size else 0)
+    total_batches = len(data) // batch_size + (1 if len(data) % batch_size else 0)
     inserted_rows = 0
 
     try:
@@ -52,25 +49,11 @@ def insert_table_data(cursor, conn, table_name, df, batch_size=1000):
             conn.commit()
             inserted_rows += len(batch)
             print(
-                f"""[Batch {i // batch_size + 1}/{total_batches}]
-                Alrready inserted {inserted_rows} rows..."""
+                f"[Batch {i // batch_size + 1}/{total_batches}] Inserted {inserted_rows} rows..."
             )
-
     except Exception as e:
         print(f"Error al insertar en {table_name}: {e}")
         conn.rollback()
-
-    # Comparar con la cantidad real en la base
-    try:
-        cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
-        db_rows = cursor.fetchone()[0]
-    except Exception as e:
-        db_rows = "Failed to count"
-        print(f"No se pudieron contar filas en '{table_name}': {e}")
-
-    elapsed = time.time() - start_time
-    print(f"[OK] '{table_name}' → CSV: {len(df)} | DB: {db_rows} filas")
-    print(f"Time: {elapsed:.2f} secs\n")
 
 
 def main():
@@ -85,29 +68,30 @@ def main():
             table_name = filename[:-4]
 
             if table_name in tables:
-                try:
-                    file_path = os.path.join(DATA_DIR, filename)
-                    df = pd.read_csv(file_path)
-                    print(
-                        f"""[INFO] CSV '{filename}':
-                        {len(df)} detected rows """
-                    )
+                file_path = os.path.join(DATA_DIR, filename)
 
-                    insert_table_data(cursor, conn, table_name, df, BATCH_SIZE)
-                    conn.commit()
+                try:
+                    chunk_iter = pd.read_csv(file_path, chunksize=CHUNK_SIZE)
+                    total_inserted = 0
+                    chunk_count = 0
+                    start_time = time.time()
+
+                    for chunk in chunk_iter:
+                        chunk_count += 1
+                        print(f"[INFO] Insertando chunk {chunk_count} ({len(chunk)} filas)...")
+                        insert_table_data(cursor, conn, table_name, chunk, BATCH_SIZE)
+                        total_inserted += len(chunk)
 
                     db_count = get_table_row_count(cursor, table_name)
-                    print(
-                        f"""[OK] '{table_name}' → CSV: {len(df)}
-                        | DB: {db_count} rows"""
-                    )
+                    elapsed = time.time() - start_time
+
+                    print(f"[OK] '{table_name}' → CSV: {total_inserted} | DB: {db_count} filas")
+                    print(f"Tiempo total: {elapsed:.2f} segundos\n")
+
                 except Exception as e:
                     print(f"[ERROR] Falló la carga para '{table_name}': {e}")
             else:
-                print(
-                    f"""[SKIP] Table does not exists '{table_name}'
-                      , omitted file."""
-                )
+                print(f"[SKIP] La tabla '{table_name}' no existe. Archivo omitido.")
 
     cursor.close()
     conn.close()
