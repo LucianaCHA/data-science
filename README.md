@@ -94,8 +94,6 @@ Ingresar el password o token '1234'
 
 Se disponibiliza un adminer en 
 
-http://[::]:8080/?server=database&username=${MYSQL_USER}&db=sales_company
-o (en Windows)
 http://localhost:8080/?server=database&username=${MYSQL_USER}&db=sales_company
 
 Segun lo definido para la env ${MYSQL_USER} 

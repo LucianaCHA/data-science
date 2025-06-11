@@ -55,6 +55,21 @@ def insert_table_data(cursor, conn, table_name, df, batch_size=1000):
         print(f"Error al insertar en {table_name}: {e}")
         conn.rollback()
 
+# check if db is empty if it is, insert data from csv files else skip
+def is_table_empty(cursor, table_name):
+    cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+    count = cursor.fetchone()[0]
+    return count == 0
+
+def check_table_is_empty(cursor, table_name):
+    cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+    count = cursor.fetchone()[0]
+    if count == 0:
+        print(f"[INFO] La tabla '{table_name}' está vacía.")
+        return True
+    else:
+        print(f"[INFO] La tabla '{table_name}' ya tiene datos. Omitiendo carga.")
+        return False  
 
 def main():
     conn = connect_to_db()
@@ -67,7 +82,8 @@ def main():
         if filename.endswith(".csv"):
             table_name = filename[:-4]
 
-            if table_name in tables:
+
+            if table_name in tables and is_table_empty(cursor, table_name):                
                 file_path = os.path.join(DATA_DIR, filename)
 
                 try:
