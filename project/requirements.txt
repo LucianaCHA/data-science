@@ -4,3 +4,5 @@ numpy
 python-dotenv
 mysql-connector-python
 python-decouple
+scikit-learn
+matplotlib
