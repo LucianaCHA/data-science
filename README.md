@@ -2,13 +2,24 @@
 
 ## Resumen
 
-Las consignas solicitadas se presentan en dos secciones principales:
+Las consignas solicitadas se presentan en formato markdown en el directorio [`delivery`](./PI/delivery/) :
 
-1. **`[nro de entrega]_delivery_live_answers`**: En estos notebook se encuentran las consultas en vivo que resuelven las consignas planteadas. Aquí se ejecutan las consultas directamente y se presentan los resultados generados en tiempo real.
-  
-2. **`/delivery/[nro de entrega]project_answers_screenshots.md`**: Se presentan las solucions y respuestas propuestas en formato markdown.
+1.[`Avance 1`](./PI/delivery/01-first-delivery/project_answers_screenshots.md)
 
-Finalmente, se añadió el notebook **`project_overview`**, que sirve como presentación del proyecto. En este documento también se ofrece la opción de ejecutar consultas que permiten verificar que los datos proporcionados en los archivos CSV fueron correctamente cargados en la base de datos, lo cual es esencial para la resolución de las consignas planteadas.
+2.[`Avance 2`](./PI/delivery/02-second-delivery/project_answers_screenshots.md)
+
+3.[`Avance 3`](./PI/delivery/03-third-delivery/)
+
+Y en formato Notebook en:
+
+1.[`Avance 1`](./PI/1st_delivery.ipynb)
+
+2.[`Avance 2`](./PI/2nd_delivery.ipynb)
+
+3.[`Avance 3`](./PI/3rd_delivery.ipynb)
+
+
+Finalmente, se añadió el notebook [`project_overview`](./PI/project_overview.ipynb), que sirve como presentación del proyecto. En este documento también se ofrece la opción de ejecutar consultas que permiten verificar que los datos proporcionados en los archivos CSV fueron correctamente cargados en la base de datos, lo cual es esencial para la resolución de las consignas planteadas.
 
 ## Detalles del Proyecto
 
@@ -33,21 +44,23 @@ El proyecto en sí mismo también está dockerizado. Se utilizó un contenedor b
 - `assets/` - Directorio de imágenes
    - 00-images
    - 01-images
-   - **-images (donde ** refere al nro de entrega)
+   - **-images (donde ** refiere al nro de entrega)
  - `data/` - Aquí deben incluirse los archivos CSV para popular la tablas
  - `delivery/` - Directorio que contiene las respuestas de cada avance
-   - 00-delivery (primer entrega)
-      - [`md_answers_file/`](./app/PI/delivery/00-first-delivery/project_answers_screenshots.md)
-   - 01-delivery (segunda entrega)
-      - [`md_answers_file/`](./app/PI/delivery/01-second-delivery/project_answers_screenshots.md)
+   - 01-delivery (primer entrega)
+      - [`md_answers_file/`](./PI/delivery/01-first-delivery/project_answers_screenshots.md)
+   - 02-delivery (segunda entrega)
+      - [`md_answers_file/`](./PI/delivery/02-second-delivery/project_answers_screenshots.md)
    - **-delivery (donde ** refere al nro de entrega)
  - `scripts/` - Scripts de inicialización y gestión del proyecto
+   - [`01_init_db.sql/`](./PI/scripts/01_init_db.sql) - Inicialización base de datos sales_company
+   - [`02_init_monitoring_table.sql/`](./PI/scripts/02_init_monitoring_table.sql) - Adición tabla de monitoreo de ventas
+   - [`create_trigger.sql/`](./PI/scripts/create_trigger.sql) - Query creaciòn de trigger umbral 200 mil ventas
+   - [`create_trigger.py/`](./PI/scripts/create_trigger.sql) - Script que ejecuta query sql anterior.
+   - [`init.sh/`](./PI/scripts/init.sh) - Inicializa proyecto, docker , instalación de dependencias , base de datos, etc.
+   - [`load_data.py/`](./PI/scripts/load_data.py) - Script para carga de datos de csv a la base de datos
  - `utils/` - Utilidades/módulos varios reutilzables en el proyecto
- - `*_live_answers.ipynb/` - En estos archivo se ejecutan las consultas y se muestran las respuestas directamente desde la base de datos. 
-   - [`first_delivery/`](./app/PI/1st_delivery_live_answers.ipynb)
-   - [`second_deliver/`](./app/PI/2nd_delivery_live_answers.ipynb)
  - `project_overview.ipynb/` - Introducción y reporte de datos
- - `project_answers_screenshots.ipynb/` - Consultas con resultados visualizados
  - `requirements.txt/` 
 
 
@@ -58,7 +71,7 @@ Renombrar el archivo `.env.example` a `.env` y definir las variables de entorno 
 
 ## Inicialización de base de datos 
 
-El proyecto ejecuta un script para crear base de datos y tablas requeridas por el proyecto. Para popularlas , se deben agregar los archivos CSV necesarios en el directorio data
+El proyecto ejecuta un script para crear base de datos y tablas requeridas por el proyecto. Para popularlas , se deben agregar los archivos CSV necesarios en el directorio data.
 
 ### Setup ambiente de desarrollo con docker compose
 

@@ -22,7 +22,7 @@ LIMIT 5;
 
 **Resultado**:
 
-![table-1-a](/app/PI/assets/00-images/image-1-a.png)
+![table-1-a](/PI/assets/00-images/image-1-a.png)
 
 
 
@@ -71,7 +71,8 @@ ORDER BY seller_quantity DESC;
 ```
 
 **Resultado**:  
-![table-1-b](/app/PI/assets/00-images/image-1-b.png)
+
+![table-1-b](/PI/assets/00-images/image-1-b.png)
 
 
 **Solución 1c** ¿Hay algún vendedor que aparece más de una vez como el que más vendió un producto? ¿Algunos de estos vendedores representan más del 10% de la ventas de este producto?
@@ -121,7 +122,7 @@ ORDER BY cc.unique_customers DESC;
 
 **Resultado**:  
 
-![table-2-a](/app/PI/assets/00-images/image-2-a.png)
+![table-2-a](/PI/assets/00-images/image-2-a.png)
 
 
 **Solución 2b** (A qué categorías pertenecen los 5 productos más vendidos y qué proporción representan dentro del total de unidades vendidas de su categoría? )
@@ -164,7 +165,7 @@ ORDER BY category_percentage DESC;
 
 **Resultado**:  
 
-![table-2-b](/app/PI/assets/00-images/image-2-b.png)
+![table-2-b](/PI/assets/00-images/image-2-b.png)
 
 
 **Solución 2c** (¿Cuáles son los 10 productos con mayor cantidad de unidades vendidas en todo el catálogo y cuál es su posición dentro de su propia categoría? Utiliza funciones de ventana para identificar el ranking de cada producto en su categoría. Luego, analiza si estos productos son también los líderes dentro de sus categorías o si compiten estrechamente con otros productos de alto rendimiento. ¿Qué observas sobre la concentración de ventas dentro de algunas categorías?)
@@ -184,7 +185,7 @@ LIMIT 5;
 
 **Resultado**:  
 
-![table-2-c](/app/PI/assets/00-images/image-2-c.png)
+![table-2-c](/PI/assets/00-images/image-2-c.png)
 
 **Análisis** En las categorías Snails, Meat y Poultry, aparecen tanto el primer como el segundo producto en el ranking dentro del top 10 de ventas. Sin embargo, la diferencia en el volumen de ventas entre el primero y el segundo lugar es pequeña, lo que indica una competencia marcada dentro de estas categorías.
 

@@ -7,8 +7,9 @@ El trigger debe activarse después de insertar una nueva venta y registrar en la
 
 **Solución** 
 
-__Se creó tabla de auditoria en la base de datos ya existente:__
+__Se creó tabla de auditoria en la base de datos ya existente:__ 
 
+(en el contexto de la aplicación el [`script`](../../scripts/02_init_monitoring_table.sql) de creación es ejecutado luego del de creación de la base de datos [`sales_company`](../../scripts/01_init_db.sql) )
 ```sql
 USE sales_company;
 
@@ -65,6 +66,7 @@ DELIMITER ;
 
 
 **NOTA** El trigger se ejecuta con cada inserción en la tabla sales. Por eso se decidió ejecutar su creación a posteriori de la carga inicial de datos, para evitar ejecuciones innecesarias durante el poblamiento inicial de la base.
+En el contexto de este proyeccto la creación , tanto del trigger como de la tabla de monitoreo, sucede durante la inicialización del mismo
 
 ##  Registro
 Registra una venta correspondiente al vendedor con ID 9, al cliente con ID 84, del producto con ID 103, por una cantidad de 1.876 unidades y un valor de 1200 unidades.
@@ -72,7 +74,7 @@ Registra una venta correspondiente al vendedor con ID 9, al cliente con ID 84, d
 Consulta la tabla de monitoreo, toma captura de los resultados y realiza un análisis breve de lo ocurrido.
 
 
-Dado que la tabla sales no cuenta con una clave primaria autoincremental, el valor de salesID se define dinámicamente a partir del valor máximo existente. Esta práctica, aunque funcional, no es adecuada en escenarios concurrentes, ya que sxiste riesgo de colisión de claves. En entornos productivos, la clave primaria debería ser un campo autoincremental para garantizar unicidad.
+Dado que la tabla sales no cuenta con una clave primaria autoincremental, el valor de salesID se define dinámicamente a partir del valor máximo existente. Esta práctica, aunque funcional, no es adecuada en escenarios concurrentes, ya que existe riesgo de colisión de claves. En entornos productivos, la clave primaria debería ser un campo autoincremental para garantizar unicidad.
 
 
 ```sql
@@ -97,7 +99,7 @@ WHERE productID = 103;
 
 **Resultado:**
 
-![resgitro_monitoring](/app/PI/assets/01-images/register.png)
+![resgitro_monitoring](/PI/assets/01-images/register.png)
 
 
 **Análisis** :
@@ -164,12 +166,12 @@ ORDER BY seller_quantity DESC;
 
 **Tiempo de ejecución previo a uso de index
 :**
-![before_index](/app/PI/assets/01-images/time_before_index.png)
+![before_index](/PI/assets/01-images/time_before_index.png)
 
 
 
 **EXPLAIN**
-![explain_before_index](/app/PI/assets/01-images/explain_before_index.png)
+![explain_before_index](/PI/assets/01-images/explain_before_index.png)
 
 
 
@@ -185,10 +187,10 @@ CREATE INDEX idx_sales_productID_salesPersonID_quantity ON sales(productID, sale
 ```
 
 **Resultado**
-![time_after_index](/app/PI/assets/01-images/time_after_index.png)
+![time_after_index](/PI/assets/01-images/time_after_index.png)
 
 
-![explain_after_index](/app/PI/assets/01-images/explain_after_index.png)
+![explain_after_index](/PI/assets/01-images/explain_after_index.png)
 
 
 ### Impacto observado
@@ -248,17 +250,17 @@ ORDER BY cc.unique_customers DESC;
 
 **Tiempo de ejecución previo a uso de index
 :**
-![before_index](/app/PI/assets/01-images/time_before_index_2.png)
+![before_index](/PI/assets/01-images/time_before_index_2.png)
 
 
 
 **EXPLAIN**
-![explain_before_index_2](/app/PI/assets/01-images/explain_before_index_2.png)
+![explain_before_index_2](/PI/assets/01-images/explain_before_index_2.png)
 
 
 
 * Índices aplicados
-Se crearon los siguientes índices para optimizar las cláusulas JOIN, GROUP BY y ORDER BY que generaban cuellos de botella:
+Se crearon los siguientes índices para optimizar las cláusulas JOIN, GROUP BY y ORDER BY que generaban cuellos de botella. En comentarios se especifica sobre qué subconsulta/tabla se espera mejorar la consulta con el ìndice.
 
 
 
@@ -277,10 +279,11 @@ CREATE INDEX idx_sales_customerID ON sales(customerID);
 ```
 
 **Resultado**
-![time_after_index_2](/app/PI/assets/01-images/time_after_index_2.png)
+
+![time_after_index_2](/PI/assets/01-images/time_after_index_2.png)
 
 
-![explain_after_index_2](/app/PI/assets/01-images/explain_after_index_2.png)
+![explain_after_index_2](/PI/assets/01-images/explain_after_index_2.png)
 
 
 ### Impacto observado
@@ -288,11 +291,11 @@ CREATE INDEX idx_sales_customerID ON sales(customerID);
 Tras la creación de los índices, 
 * El tiempo de ejecución se redujo casi 5 veces (~3 segundos en entorno kernel). 
 
-* Explain muestra que se están usando índices en casi todos los joins y filtros, esto redunda en su optmización.
+* Explain muestra que planea usar los índices creados en casi todos los joins y filtros, lo cual es muy relevante dado que son las operaciones potencialmente más costosas.
 
-* La tabla sales ahora usa range y ref en lugar de ALL (full scan).
+* La tabla sales ahora usa range y ref en lugar de ALL, cuyo significa un scaneo de toda la tabla.
 * Los índices idx_sales_customerID e idx_sales_productID_customerID están 
-tp.product_id reduce a 5 filas, lo cual permite joins rápidos y precisos (dado que son menos elementos)
+tp.product_id reduce a 5 filas, lo cual permite joins màs rápidos y precisos (dado que son menos elementos)
 
 
 

@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 .env
 *.ipynb_checkpoints/
+!PI/.ipynb_checkpoints/
 *.log
 *.sqlite
 .DS_Store
@@ -17,3 +18,5 @@ __pycache__/
 
 PI/data/*
 !PI/data/.keep
+
+notas_txt

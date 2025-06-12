@@ -32,7 +32,6 @@ def get_table_row_count(cursor, table_name):
 def insert_table_data(cursor, conn, table_name, df, batch_size=1000):
     print(f"[INFO] Insertando datos en '{table_name}' desde CSV...")
 
-    start_time = time.time()
     df = df.where(pd.notnull(df), None)
     cols = ", ".join(df.columns)
     placeholders = ", ".join(["%s"] * len(df.columns))
@@ -44,7 +43,7 @@ def insert_table_data(cursor, conn, table_name, df, batch_size=1000):
 
     try:
         for i in range(0, len(data), batch_size):
-            batch = data[i: i + batch_size]
+            batch = data[i : i + batch_size]
             cursor.executemany(sql, batch)
             conn.commit()
             inserted_rows += len(batch)
@@ -55,11 +54,13 @@ def insert_table_data(cursor, conn, table_name, df, batch_size=1000):
         print(f"Error al insertar en {table_name}: {e}")
         conn.rollback()
 
+
 # check if db is empty if it is, insert data from csv files else skip
 def is_table_empty(cursor, table_name):
     cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
     count = cursor.fetchone()[0]
     return count == 0
+
 
 def check_table_is_empty(cursor, table_name):
     cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
@@ -69,7 +70,8 @@ def check_table_is_empty(cursor, table_name):
         return True
     else:
         print(f"[INFO] La tabla '{table_name}' ya tiene datos. Omitiendo carga.")
-        return False  
+        return False
+
 
 def main():
     conn = connect_to_db()
@@ -82,8 +84,7 @@ def main():
         if filename.endswith(".csv"):
             table_name = filename[:-4]
 
-
-            if table_name in tables and is_table_empty(cursor, table_name):                
+            if table_name in tables and is_table_empty(cursor, table_name):
                 file_path = os.path.join(DATA_DIR, filename)
 
                 try:
@@ -94,20 +95,26 @@ def main():
 
                     for chunk in chunk_iter:
                         chunk_count += 1
-                        print(f"[INFO] Insertando chunk {chunk_count} ({len(chunk)} filas)...")
+                        print(
+                            f"[INFO] Insertando chunk {chunk_count} ({len(chunk)} filas)..."
+                        )
                         insert_table_data(cursor, conn, table_name, chunk, BATCH_SIZE)
                         total_inserted += len(chunk)
 
                     db_count = get_table_row_count(cursor, table_name)
                     elapsed = time.time() - start_time
 
-                    print(f"[OK] '{table_name}' → CSV: {total_inserted} | DB: {db_count} filas")
+                    print(
+                        f"[OK] '{table_name}' → CSV: {total_inserted} | DB: {db_count} filas"
+                    )
                     print(f"Tiempo total: {elapsed:.2f} segundos\n")
 
                 except Exception as e:
                     print(f"[ERROR] Falló la carga para '{table_name}': {e}")
             else:
-                print(f"[SKIP] La tabla '{table_name}' no existe. Archivo omitido.")
+                print(
+                    f"[SKIP] La tabla '{table_name}' no existe o ya tiene datos. Archivo omitido."
+                )
 
     cursor.close()
     conn.close()
