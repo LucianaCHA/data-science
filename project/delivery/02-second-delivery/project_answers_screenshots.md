@@ -99,7 +99,7 @@ WHERE productID = 103;
 
 **Resultado:**
 
-![resgitro_monitoring](/PI/assets/01-images/register.png)
+![resgitro_monitoring](/project/assets/01-images/register.png)
 
 
 **Análisis** :
@@ -166,12 +166,12 @@ ORDER BY seller_quantity DESC;
 
 **Tiempo de ejecución previo a uso de index
 :**
-![before_index](/PI/assets/01-images/time_before_index.png)
+![before_index](/project/assets/01-images/time_before_index.png)
 
 
 
 **EXPLAIN**
-![explain_before_index](/PI/assets/01-images/explain_before_index.png)
+![explain_before_index](/project/assets/01-images/explain_before_index.png)
 
 
 
@@ -187,10 +187,10 @@ CREATE INDEX idx_sales_productID_salesPersonID_quantity ON sales(productID, sale
 ```
 
 **Resultado**
-![time_after_index](/PI/assets/01-images/time_after_index.png)
+![time_after_index](/project/assets/01-images/time_after_index.png)
 
 
-![explain_after_index](/PI/assets/01-images/explain_after_index.png)
+![explain_after_index](/project/assets/01-images/explain_after_index.png)
 
 
 ### Impacto observado
@@ -250,12 +250,12 @@ ORDER BY cc.unique_customers DESC;
 
 **Tiempo de ejecución previo a uso de index
 :**
-![before_index](/PI/assets/01-images/time_before_index_2.png)
+![before_index](/project/assets/01-images/time_before_index_2.png)
 
 
 
 **EXPLAIN**
-![explain_before_index_2](/PI/assets/01-images/explain_before_index_2.png)
+![explain_before_index_2](/project/assets/01-images/explain_before_index_2.png)
 
 
 
@@ -280,10 +280,10 @@ CREATE INDEX idx_sales_customerID ON sales(customerID);
 
 **Resultado**
 
-![time_after_index_2](/PI/assets/01-images/time_after_index_2.png)
+![time_after_index_2](/project/assets/01-images/time_after_index_2.png)
 
 
-![explain_after_index_2](/PI/assets/01-images/explain_after_index_2.png)
+![explain_after_index_2](/project/assets/01-images/explain_after_index_2.png)
 
 
 ### Impacto observado

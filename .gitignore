@@ -2,21 +2,21 @@ __pycache__/
 *.pyc
 .env
 *.ipynb_checkpoints/
-!PI/.ipynb_checkpoints/
+!project/.ipynb_checkpoints/
 *.log
 *.sqlite
 .DS_Store
 .vscode/
 *.idea/
 # Docker
-*.pid
+*.projectd
 *.tar
 *.sock
 *.img
 *.container
 
 
-PI/data/*
-!PI/data/.keep
+project/data/*
+!project/data/.keep
 
 notas_txt

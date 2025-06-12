@@ -2,24 +2,24 @@
 
 ## Resumen
 
-Las consignas solicitadas se presentan en formato markdown en el directorio [`delivery`](./PI/delivery/) :
+Las consignas solicitadas se presentan en formato markdown en el directorio [`delivery`](./project/delivery/) :
 
-1.[`Avance 1`](./PI/delivery/01-first-delivery/project_answers_screenshots.md)
+1.[`Avance 1`](./project/delivery/01-first-delivery/project_answers_screenshots.md)
 
-2.[`Avance 2`](./PI/delivery/02-second-delivery/project_answers_screenshots.md)
+2.[`Avance 2`](./project/delivery/02-second-delivery/project_answers_screenshots.md)
 
-3.[`Avance 3`](./PI/delivery/03-third-delivery/)
+3.[`Avance 3`](./project/delivery/03-third-delivery/)
 
 Y en formato Notebook en:
 
-1.[`Avance 1`](./PI/1st_delivery.ipynb)
+1.[`Avance 1`](./project/1st_delivery.ipynb)
 
-2.[`Avance 2`](./PI/2nd_delivery.ipynb)
+2.[`Avance 2`](./project/2nd_delivery.ipynb)
 
-3.[`Avance 3`](./PI/3rd_delivery.ipynb)
+3.[`Avance 3`](./project/3rd_delivery.ipynb)
 
 
-Finalmente, se añadió el notebook [`project_overview`](./PI/project_overview.ipynb), que sirve como presentación del proyecto. En este documento también se ofrece la opción de ejecutar consultas que permiten verificar que los datos proporcionados en los archivos CSV fueron correctamente cargados en la base de datos, lo cual es esencial para la resolución de las consignas planteadas.
+Finalmente, se añadió el notebook [`project_overview`](./project/project_overview.ipynb), que sirve como presentación del proyecto. En este documento también se ofrece la opción de ejecutar consultas que permiten verificar que los datos proporcionados en los archivos CSV fueron correctamente cargados en la base de datos, lo cual es esencial para la resolución de las consignas planteadas.
 
 ## Detalles del Proyecto
 
@@ -40,7 +40,7 @@ El proyecto en sí mismo también está dockerizado. Se utilizó un contenedor b
 
 ## Estructura del proyecto
 
-`PI/`
+`project/`
 - `assets/` - Directorio de imágenes
    - 00-images
    - 01-images
@@ -48,17 +48,17 @@ El proyecto en sí mismo también está dockerizado. Se utilizó un contenedor b
  - `data/` - Aquí deben incluirse los archivos CSV para popular la tablas
  - `delivery/` - Directorio que contiene las respuestas de cada avance
    - 01-delivery (primer entrega)
-      - [`md_answers_file/`](./PI/delivery/01-first-delivery/project_answers_screenshots.md)
+      - [`md_answers_file/`](./project/delivery/01-first-delivery/project_answers_screenshots.md)
    - 02-delivery (segunda entrega)
-      - [`md_answers_file/`](./PI/delivery/02-second-delivery/project_answers_screenshots.md)
+      - [`md_answers_file/`](./project/delivery/02-second-delivery/project_answers_screenshots.md)
    - **-delivery (donde ** refere al nro de entrega)
  - `scripts/` - Scripts de inicialización y gestión del proyecto
-   - [`01_init_db.sql/`](./PI/scripts/01_init_db.sql) - Inicialización base de datos sales_company
-   - [`02_init_monitoring_table.sql/`](./PI/scripts/02_init_monitoring_table.sql) - Adición tabla de monitoreo de ventas
-   - [`create_trigger.sql/`](./PI/scripts/create_trigger.sql) - Query creaciòn de trigger umbral 200 mil ventas
-   - [`create_trigger.py/`](./PI/scripts/create_trigger.sql) - Script que ejecuta query sql anterior.
-   - [`init.sh/`](./PI/scripts/init.sh) - Inicializa proyecto, docker , instalación de dependencias , base de datos, etc.
-   - [`load_data.py/`](./PI/scripts/load_data.py) - Script para carga de datos de csv a la base de datos
+   - [`01_init_db.sql/`](./project/scripts/01_init_db.sql) - Inicialización base de datos sales_company
+   - [`02_init_monitoring_table.sql/`](./project/scripts/02_init_monitoring_table.sql) - Adición tabla de monitoreo de ventas
+   - [`create_trigger.sql/`](./project/scripts/create_trigger.sql) - Query creaciòn de trigger umbral 200 mil ventas
+   - [`create_trigger.py/`](./project/scripts/create_trigger.sql) - Script que ejecuta query sql anterior.
+   - [`init.sh/`](./project/scripts/init.sh) - Inicializa proyecto, docker , instalación de dependencias , base de datos, etc.
+   - [`load_data.py/`](./project/scripts/load_data.py) - Script para carga de datos de csv a la base de datos
  - `utils/` - Utilidades/módulos varios reutilzables en el proyecto
  - `project_overview.ipynb/` - Introducción y reporte de datos
  - `requirements.txt/` 
@@ -99,7 +99,7 @@ docker compose -p integrator_project down [-v]
 
 Una vez que el contenedor esté corriendo, se puede acceder a Jupyter Notebook desde el navegador:
 
-- **Puerto por defecto (8888)**: `http://localhost:8888`
+- **Puerto por defecto (8888)**: http://localhost:8888
 
 Ingresar el password o token '1234'
 
