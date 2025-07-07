@@ -77,22 +77,22 @@ El proyecto ejecuta un script para crear base de datos y tablas requeridas por e
 
 Para construir imágenes:
 ```bash
-docker compose -p integrator_project build
+docker compose -p project build
 ```
 
 para correr el proyecto
 ```bash
-docker compose -p integrator_project up
+docker compose -p project up
 ```
 
 Para detener contenedores (Ctrl + c)
 ```bash
-docker compose -p integrator_project stop
+docker compose -p project stop
 ```
 
 Para eliminar imágenes [con la opción -v, se borran todas las actualizaciones del dump inicial, y cuando se levante nuevamente, lo hará con los datos iniciales de /data]
 ```bash
-docker compose -p integrator_project down [-v]
+docker compose -p project down [-v]
 ```
 
 ###  Acceso a Jupyter Notebook
