@@ -27,7 +27,7 @@ services:
       - "8888:8888"
     volumes:
       - ./${UNIT_PATH}:/app
-      - ./project/scripts/init.sh:/init.sh
+      - ./pi_mod_01/scripts/init.sh:/init.sh
     tty: true
 
   adminer:

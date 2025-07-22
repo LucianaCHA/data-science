@@ -17,12 +17,14 @@ def connect_to_db():
         port=os.getenv("POSTGRES_PORT", "5432"),
     )
 
+
 def run_query(query: str, params=None):
     conn = connect_to_db()
     try:
         return pd.read_sql_query(query, conn, params=params)
     finally:
         conn.close()
+
 
 def run_non_select_query(query: str, params=None):
     conn = connect_to_db()
