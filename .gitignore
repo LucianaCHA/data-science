@@ -21,4 +21,4 @@ pi_mod_01/data/*
 pi_mod_02/scripts/db/data/*
 !pi_mod_02/scripts/db/data/*.keep
 
-notas_txt
+apuntes.txt

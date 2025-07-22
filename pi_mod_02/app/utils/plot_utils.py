@@ -44,35 +44,65 @@ def plot_boxplot_with_outliers(table, column, step=10, show_outlier_count=True):
     plt.show()
 
     return outliers, lower_bound, upper_bound
-    # """
-    # Plots a boxplot of the specified column with IQR-based outlier bounds.
 
-    # Parameters:
-    # - df (pd.DataFrame): DataFrame containing the data.
-    # - column (str): Column to analyze.
-    # - step (int): Step size for x-axis ticks.
-    # - show_outlier_count (bool): Whether to print number of outliers.
-    # """
-    # Q1 = df[column].quantile(0.25)
-    # Q3 = df[column].quantile(0.75)
-    # IQR = Q3 - Q1
-    # lower_bound = Q1 - 1.5 * IQR
-    # upper_bound = Q3 + 1.5 * IQR
 
-    # outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
+def plot_top_bar_chart(
+    df,
+    x_column: str,
+    y_column: str,
+    plot_title: str = "plot",
+    x_label: str = "",
+    y_label: str = "",
+    top_n: int = 10,
+    figsize=(12, 6),
+):
+    if df.empty:
+        print("⚠️ El DataFrame está vacío. No se puede generar el gráfico.")
+        return
 
-    # if show_outlier_count:
-    #     print(f"Number of outliers in '{column}': {len(outliers)}")
+    # Ordenar y limitar los datos
+    df_sorted = df.sort_values(by=y_column, ascending=False).head(top_n)
 
-    # # Plot
-    # plt.figure(figsize=(10, 2))
-    # sns.boxplot(x=df[column])
-    # plt.title(f"Boxplot of {column}")
-    # # plt.axvline(lower_bound, color="red", linestyle="--", label="Lower bound")
-    # # plt.axvline(upper_bound, color="red", linestyle="--", label="Upper bound")
-    # plt.xticks(np.arange(0, int(df[column].max()) + step, step))
-    # # plt.legend()
-    # plt.tight_layout()
-    # plt.show()
+    # Crear figura
+    plt.figure(figsize=figsize)
 
-    # return outliers, lower_bound, upper_bound
+    # Gráfico de barras
+    sns.barplot(
+        data=df_sorted,
+        x=x_column,
+        y=y_column,
+        color="skyblue",
+    )
+
+    # Títulos y etiquetas
+    plt.title(plot_title, fontsize=18)
+    plt.xlabel(x_label, fontsize=16)
+    plt.ylabel(y_label, fontsize=16)
+    plt.xticks(rotation=45, ha="right", fontsize=12)
+    plt.yticks(fontsize=12)
+
+    # Ajuste de layout
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_top_spenders(
+    df,
+    x_column: str,
+    y_column: str,
+    plot_title: str = "Top Spenders",
+    x_label: str = "Spender",
+    y_label: str = "Amount Spent",
+    top_n: int = 10,
+    figsize=(12, 6),
+):
+    plot_top_bar_chart(
+        df,
+        x_column=x_column,
+        y_column=y_column,
+        plot_title=plot_title,
+        x_label=x_label,
+        y_label=y_label,
+        top_n=top_n,
+        figsize=figsize,
+    )
