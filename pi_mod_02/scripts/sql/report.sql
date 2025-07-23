@@ -1,3 +1,4 @@
+-- Usuarios Report SQL
 -- consulta clientes registrados por mes 
 SELECT 
     DATE_TRUNC('month', "FechaRegistro") AS register_month, 
@@ -29,3 +30,99 @@ LIMIT 10;
 SELECT 
     COUNT(DISTINCT "UsuarioID") AS users_with_reviews
 FROM "ReseñasProductos";
+
+
+-- Report SQL - Productos
+-- ¿Qué productos tienen alto stock pero bajas ventas?
+SELECT 
+    p."ProductoID",
+    p."Nombre",
+    p."Stock",
+    COALESCE(SUM(d."Cantidad"), 0) AS total_vendido
+FROM "Productos" p
+LEFT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
+GROUP BY p."ProductoID", p."Nombre", p."Stock"
+ORDER BY p."Stock" DESC, total_vendido ASC
+LIMIT 10;
+
+-- # ranking de ventas por producto
+SELECT 
+    p."ProductoID",
+    p."Nombre",
+    p."Stock",
+    COALESCE(SUM(d."Cantidad"), 0) AS total_vendido
+FROM "Productos" p
+LEFT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
+GROUP BY p."ProductoID", p."Nombre", p."Stock"
+HAVING p."Stock" >= 150 AND COALESCE(SUM(d."Cantidad"), 0) < 500
+ORDER BY p."Stock" DESC;
+
+-- Ordenar por stock decreciente los productos con menos de 500 ventas 
+SELECT 
+    p."ProductoID",
+    p."Nombre",
+    p."Stock",
+    COALESCE(SUM(d."Cantidad"), 0) AS total_vendido
+FROM "Productos" p
+LEFT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
+GROUP BY p."ProductoID", p."Nombre", p."Stock"
+HAVING COALESCE(SUM(d."Cantidad"), 0) < 100
+ORDER BY p."Stock" DESC
+LIMIT 10;
+
+-- ¿Cuántos productos están actualmente fuera de stock?
+SELECT COUNT(*) AS total_out_of_stock
+FROM "Productos"
+WHERE "Stock" = 0;
+
+-- ¿Cuáles son los productos peor calificados?
+
+SELECT 
+    p."ProductoID",
+    p."Nombre",
+    p."Stock",
+    COALESCE(SUM(d."Cantidad"), 0) AS total_vendido,
+    AVG(r."Calificacion") AS promedio_calificacion
+FROM "Productos" p
+LEFT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
+LEFT JOIN "ReseñasProductos" r ON p."ProductoID" = r."ProductoID"
+GROUP BY p."ProductoID", p."Nombre", p."Stock"
+HAVING AVG(r."Calificacion") IS NOT NULL
+ORDER BY promedio_calificacion ASC
+LIMIT 10;
+
+-- producto con mayor cantidad de reseñas 
+SELECT 
+    p."ProductoID",
+    p."Nombre",
+    COUNT(r."ReseñaID") AS total_reseñas
+FROM "Productos" p
+LEFT JOIN "ReseñasProductos" r ON p."ProductoID" = r."ProductoID"
+GROUP BY p."ProductoID", p."Nombre"
+ORDER BY total_reseñas DESC
+LIMIT 10;
+
+-- ¿Qué categoría tiene el mayor valor económico vendido (no solo volumen)?
+
+SELECT 
+    c."CategoriaID",
+    c."Nombre" AS categoria,
+    SUM(d."Cantidad" * p."Precio") AS valor_vendido
+FROM "Categorias" c
+JOIN "Productos" p ON c."CategoriaID" = p."CategoriaID"
+LEFT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
+GROUP BY c."CategoriaID", c."Nombre"
+ORDER BY valor_vendido DESC
+LIMIT 10;
+
+-- ranking de categorías
+SELECT 
+    c."CategoriaID",
+    c."Nombre" AS categoria,
+    COUNT(d."Cantidad") AS total_vendido
+FROM "Categorias" c
+JOIN "Productos" p ON c."CategoriaID" = p."CategoriaID"
+LEFT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
+GROUP BY c."CategoriaID", c."Nombre"
+ORDER BY total_vendido DESC
+LIMIT 10;

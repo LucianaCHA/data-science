@@ -106,3 +106,43 @@ def plot_top_spenders(
         top_n=top_n,
         figsize=figsize,
     )
+
+
+def plot_high_stock_lowest_sells():
+    """
+    Muestra productos con alto stock (>=150) y bajas ventas (<500).
+    Gráfico de stock con anotación de ventas.
+    """
+    query = """
+    SELECT
+        p."ProductoID",
+        p."Nombre",
+        p."Stock",
+        COALESCE(SUM(d."Cantidad"), 0) AS total_vendido
+    FROM "Productos" p
+    LEFT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
+    GROUP BY p."ProductoID", p."Nombre", p."Stock"
+    HAVING p."Stock" >= 150 AND COALESCE(SUM(d."Cantidad"), 0) < 500
+    ORDER BY p."Stock" DESC;
+
+    """
+    df = postgres_utils.run_query(query)
+    df = df.sort_values(by="Stock", ascending=True)
+
+    plt.figure(figsize=(8, 5))
+    bars = plt.barh(df["Nombre"], df["Stock"], color="lightblue")
+
+    for bar, val in zip(bars, df["total_vendido"]):
+        plt.text(
+            bar.get_width() + 2,
+            bar.get_y() + bar.get_height() / 2,
+            f"Vendidos: {val}",
+            va="center",
+            fontsize=9,
+            color="gray",
+        )
+
+    plt.xlabel("Stock disponible")
+    plt.title("Productos con alto stock y bajas ventas")
+    plt.tight_layout()
+    plt.show()
