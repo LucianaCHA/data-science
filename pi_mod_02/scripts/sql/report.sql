@@ -126,3 +126,50 @@ LEFT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
 GROUP BY c."CategoriaID", c."Nombre"
 ORDER BY total_vendido DESC
 LIMIT 10;
+
+-- Exploracion Ordenes
+--¿Cuáles son los productos más vendidos por volumen?
+SELECT 
+    p."ProductoID",
+    p."Nombre",
+    SUM(d."Cantidad") AS total_vendido
+FROM "Productos" p
+RIGHT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
+GROUP BY p."ProductoID", p."Nombre"
+ORDER BY total_vendido DESC
+LIMIT 10;
+
+-- ¿Cuál es el ticket promedio por orden?
+SELECT
+    AVG("Total") AS ticket_promedio
+    FROM "Ordenes";
+
+-- ¿Cuáles son las categorías con mayor número de productos vendidos?
+
+SELECT
+    c."CategoriaID",
+    c."Nombre" AS categoria,
+    COUNT(d."Cantidad") AS total_vendido
+FROM "Categorias" c
+JOIN "Productos" p ON c."CategoriaID" = p."CategoriaID"
+LEFT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
+GROUP BY c."CategoriaID", c."Nombre"
+ORDER BY total_vendido DESC
+LIMIT 10;
+
+-- Ventas por día de semana 
+SELECT
+    TO_CHAR("FechaOrden", 'Day') AS dia_semana,
+    COUNT(*) AS total_ventas
+FROM "Ordenes"
+GROUP BY dia_semana
+ORDER BY total_ventas DESC;
+
+--Ordenes por mes 
+
+SELECT
+    DATE_TRUNC('month', "FechaOrden") AS mes,
+    COUNT(*) AS total_ordenes
+FROM "Ordenes"
+GROUP BY mes
+ORDER BY mes;

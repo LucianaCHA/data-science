@@ -57,3 +57,18 @@ def show_table_stats(table_name: str):
     data = postgres_utils.run_query(f'SELECT * FROM "{table_name}";')
     print_colored("Estadísticas de tabla", "orange")
     display(data.describe())
+
+
+def show_unique_values(table_name: str, column: str):
+    """
+    Muestra los valores únicos de una columna específica en una tabla.
+
+    Parámetros:
+    - table_name: str Nombre de la tabla.
+    - column: str  Nombre de la columna para obtener valores únicos.
+    """
+    query = f'SELECT DISTINCT "{column}" FROM "{table_name}";'
+    unique_values = postgres_utils.run_query(query)
+
+    print_colored(f"Valores únicos en '{column}' de '{table_name}':", "orange")
+    display(unique_values)

@@ -115,16 +115,16 @@ def plot_high_stock_lowest_sells():
     """
     query = """
     SELECT
-        p."ProductoID",
-        p."Nombre",
-        p."Stock",
-        COALESCE(SUM(d."Cantidad"), 0) AS total_vendido
+    p."ProductoID",
+    p."Nombre",
+    p."Stock",
+    COALESCE(SUM(d."Cantidad"), 0) AS total_vendido
     FROM "Productos" p
     LEFT JOIN "DetalleOrdenes" d ON p."ProductoID" = d."ProductoID"
     GROUP BY p."ProductoID", p."Nombre", p."Stock"
-    HAVING p."Stock" >= 150 AND COALESCE(SUM(d."Cantidad"), 0) < 500
-    ORDER BY p."Stock" DESC;
-
+    HAVING COALESCE(SUM(d."Cantidad"), 0) < 790
+    ORDER BY p."Stock" DESC
+    LIMIT 10;
     """
     df = postgres_utils.run_query(query)
     df = df.sort_values(by="Stock", ascending=True)
