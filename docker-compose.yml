@@ -8,7 +8,7 @@ services:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - database_data:/var/lib/postgresql/data 
-      - "./${DB_PATH}/01_init_db.sql:/docker-entrypoint-initdb.d/01_init_db.sql"
+      - "./pi_mod_02/scripts/db/:/docker-entrypoint-initdb.d/"
     tty: true
 
   project:
@@ -21,8 +21,9 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - ./${UNIT_PATH}:/app
-      - ./MOD2/LECTURE1/scripts/init.sh:/init.sh 
+      - ./pi_mod_02:/app
+      - ./pi_mod_02/scripts/init.sh:/init.sh 
+      - ./pi_mod_02/dbt_project/profiles:/app/.dbt  
     tty: true
 
   adminer:

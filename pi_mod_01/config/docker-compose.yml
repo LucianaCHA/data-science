@@ -1,0 +1,39 @@
+services:
+  database:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    env_file: .env
+    command: > # sacar a otro archivo o ver si funca desde el archivo que crea la base
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --log-bin-trust-function-creators=1
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - "./${DB_PATH}/01_init_db.sql:/docker-entrypoint-initdb.d/01_init_db.sql"
+      - "./${DB_PATH}/02_init_monitoring_table.sql:/docker-entrypoint-initdb.d/02_init_monitoring_table.sql"
+    tty: true
+
+  integrator_project:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: integrator_project
+    env_file: .env
+    command: ["/init.sh"]
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./${UNIT_PATH}:/app
+      - ./pi_mod_01/scripts/init.sh:/init.sh
+    tty: true
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+volumes:
+  mysql-data:

@@ -1,1 +1,0 @@
-mover a la raiz del proyecto los archivos del directorio config

@@ -1,0 +1,9 @@
+name: 'ecommerce_dbt'
+version: '1.0'
+profile: 'default'
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
