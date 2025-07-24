@@ -2,31 +2,28 @@
 
 ## Resumen
 
-Las consignas solicitadas se presentan en formato markdown en el directorio [`delivery`](./project/delivery/) :
+Las entregas solicitadas se presentan en notebooks en el directorio [`delivery`](./project/delivery/) :
 
-1.[`Avance 1`](./project/delivery/01-first-delivery/project_answers_screenshots.md)
+* Entrega 1 - Por cuestiones de lectura y organización se presenta en tres secciones (archivos) 
 
-2.[`Avance 2`](./project/delivery/02-second-delivery/project_answers_screenshots.md)
+   1 .[`Consigna 1a `](/pi_mod_02/delivery/01-first-delivery/1st_delivery_intro.ipynb): Desarrollo de consignas de configuración y preparación de entorno.
 
-3.[`Avance 3`](./project/delivery/03-third-delivery/)
+   2.[`Consigna 1b `](/pi_mod_02/delivery/01-first-delivery/1st_delivery.ipynb): Desarrollo de consignas relacionadas a exploración de la base de datos, con análisis, queries y tablsa que buscan conocer las tablas y proponer mejoras
 
-Y en formato Notebook en:
+   3.[`Reporte Técnico`](/pi_mod_02/delivery/01-first-delivery/1st_tech_report.ipynb) Reporte Técnico , con las conclusiones y visualizaciones tras exploración.
 
-1.[`Avance 1`](./project/1st_delivery.ipynb)
+* Entrega 2 - 
+   1. [`Modelo conceptual y lógico`](/pi_mod_02/delivery/02-second-delivery/2nd_delivery.ipynb) : Definición de hechos y dimensiones según la metodología Kimball en base a los hallazgos de la entrega 1. Se completa propuesta de modelo conceptual y lógico.
 
-2.[`Avance 2`](./project/2nd_delivery.ipynb)
-
-3.[`Avance 3`](./project/3rd_delivery.ipynb)
-
-
-Finalmente, se añadió el notebook [`project_overview`](./project/project_overview.ipynb), que sirve como presentación del proyecto. En este documento también se ofrece la opción de ejecutar consultas que permiten verificar que los datos proporcionados en los archivos CSV fueron correctamente cargados en la base de datos, lo cual es esencial para la resolución de las consignas planteadas.
+* Entrega 3 - 
+   1. [`Modelo físco con DBT`](/pi_mod_02/delivery/03-third-delivery/3rd_delivery.ipynb)
 
 ## Detalles del Proyecto
 
 Este proyecto fue desarrollado dentro de un **entorno Dockerizado**, para facilitar configuración y ejecución del sistema en diferentes entornos. Los siguientes servicios fueron dockerizados:
 
-1. **Base de Datos (MySQL)**: 
-   Se utilizó la imagen oficial de **MySQL 8.0** para crear un contenedor que aloja la base de datos del proyecto. La configuración de la base de datos, incluida la creación de tablas y la carga de datos desde los archivos CSV proporcionados, se realiza mediante un archivo SQL que se inicializa automáticamente al levantar el contenedor.
+1. **Base de Datos (Postgress)**: 
+   Se utilizó la imagen oficial de **Postgress** para crear un contenedor que aloja la base de datos del proyecto. La configuración de la base de datos, incluida la creación de tablas y la carga de datos desde los archivos sql proporcionados, se realiza mediante un archivo SQL que se inicializa automáticamente al levantar el contenedor.
 
 2. **ADminer** Se utilizó Adminer como una herramienta web para la administración de bases de datos. Este contenedor facilita la interacción con la base de datos MySQL a través de una interfaz gráfica. Expuesto en puerto 8080
 
@@ -40,27 +37,34 @@ El proyecto en sí mismo también está dockerizado. Se utilizó un contenedor b
 
 ## Estructura del proyecto
 
-`project/`
-- `assets/` - Directorio de imágenes
-   - 00-images
-   - 01-images
-   - **-images (donde ** refiere al nro de entrega)
- - `data/` - Aquí deben incluirse los archivos CSV para popular la tablas
- - `delivery/` - Directorio que contiene las respuestas de cada avance
+`pi_mod_02/`
+ - `app/`
+   - `assets/` -  Archivos de recursos (CSV, imágenes, etc.)
+   - `config/` - Configuración general del proyecto
+   - `db/`     - Módulo de conexión y operaciones con la base de datos
+   - `loader/` - Clases para la carga de datos
+   - `models/' - Modelos de datos (clases, validaciones)
+   - `repository/` - Capa de abstracción de operaciones con datos
+   - `utils/`       -Funciones auxiliares y utilitarias
+
+ - `dbt_project/` - Proyecto DBT para transformación de datos
+ - `delivery/` - Directorio que contiene los requerimientos de cada avance
    - 01-delivery (primer entrega)
-      - [`md_answers_file/`](./project/delivery/01-first-delivery/project_answers_screenshots.md)
+      - [`Instalación y entorno`](/pi_mod_02/delivery/01-first-delivery/1st_delivery_intro.ipynb)
+      - [`Exploración`](/pi_mod_02/delivery/01-first-delivery/1st_delivery_intro.ipynb)
+      - [`Informe técnico`](/pi_mod_02/delivery/01-first-delivery/1st_delivery_intro.ipynb)
    - 02-delivery (segunda entrega)
-      - [`md_answers_file/`](./project/delivery/02-second-delivery/project_answers_screenshots.md)
-   - **-delivery (donde ** refere al nro de entrega)
+      - [`Modelo conceptual y lógico`](/pi_mod_02/delivery/02-second-delivery/2nd_delivery.ipynb)
+   - 03-delivery (tercer entrega)
+      - [`Modelo físico con DBT`](/pi_mod_02/delivery/03-third-delivery/3rd_delivery.ipynb)
  - `scripts/` - Scripts de inicialización y gestión del proyecto
-   - [`01_init_db.sql/`](./project/scripts/01_init_db.sql) - Inicialización base de datos sales_company
-   - [`02_init_monitoring_table.sql/`](./project/scripts/02_init_monitoring_table.sql) - Adición tabla de monitoreo de ventas
-   - [`create_trigger.sql/`](./project/scripts/create_trigger.sql) - Query creaciòn de trigger umbral 200 mil ventas
-   - [`create_trigger.py/`](./project/scripts/create_trigger.sql) - Script que ejecuta query sql anterior.
-   - [`init.sh/`](./project/scripts/init.sh) - Inicializa proyecto, docker , instalación de dependencias , base de datos, etc.
-   - [`load_data.py/`](./project/scripts/load_data.py) - Script para carga de datos de csv a la base de datos
- - `utils/` - Utilidades/módulos varios reutilzables en el proyecto
- - `project_overview.ipynb/` - Introducción y reporte de datos
+   - `db/` 
+      - `data/` - incluye los sql para popular tablas
+         - [`01_init__db.sql/`](/pi_mod_02/scripts/db/01_init_db.sql) - Script para vrea base de datos.
+         - [`init.sh/`](./project/scripts/init.sh) - Inicializa proyecto, docker , instalación de dependencias , base de datos, etc.
+
+      - `sql/`
+         - [`Anexo queries`](/pi_mod_02/scripts/sql/report.sql)
  - `requirements.txt/` 
 
 
@@ -71,7 +75,11 @@ Renombrar el archivo `.env.example` a `.env` y definir las variables de entorno 
 
 ## Inicialización de base de datos 
 
-El proyecto ejecuta un script para crear base de datos y tablas requeridas por el proyecto. Para popularlas , se deben agregar los archivos CSV necesarios en el directorio data.
+El proyecto ejecuta un script para crear base de datos y tablas requeridas por el proyecto. Para popularlas , se utiliza SQLAlchemy para la creación de las tablas y la carga inicial de datos.
+
+Los datos se cargan a partir de archivos sql alojados en el directorio scripts/db/data/.
+
+Cada conjunto de datos tiene un loader dedicado, basado en la clase abstracta DataLoader, que gestiona su lectura, parseo e inserción.
 
 ### Setup ambiente de desarrollo con docker compose
 
@@ -124,4 +132,4 @@ Están ubicadas en el archivo `.env.example`
 ### `MYSQL_*`
 - Utilizadas para la BD de `docker compose`
 
-**Nota** Se debe mantener el nombre de la base de datos como __sales_company__ y las envs de los path tal cual se brindan en el archivo env_example
+**Nota** Se debe mantener el nombre de la base de datos como __ecommerce_db__ y las envs de los path tal cual se brindan en el archivo env_example

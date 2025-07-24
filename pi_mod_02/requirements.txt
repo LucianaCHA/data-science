@@ -7,3 +7,5 @@ python-decouple
 sqlalchemy
 matplotlib 
 seaborn
+dbt-core 
+dbt-postgres

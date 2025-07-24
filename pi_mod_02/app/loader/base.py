@@ -77,7 +77,6 @@ class DataLoader(ABC):  # Abstract Base Clas
                     record = {
                         sql_to_model[col]: row[i] for i, col in enumerate(sql_to_model)
                     }
-                    print(f"Parsed record: {record}")
                     if extra_fields:
                         record.update(extra_fields)
                     records.append(record)
@@ -125,7 +124,5 @@ class DataLoader(ABC):  # Abstract Base Clas
 
     def run(self, db: Session):
         content = self._read_file()
-        print(f"Processing file: {self.file_path}")
         records = self._parse_file(content)
-        print(f"Parsed {len(records)} records from {self.file_path}.")
         self._save_records(db, records)

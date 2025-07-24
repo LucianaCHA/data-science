@@ -24,8 +24,6 @@ def run_all_table_loaders():
 
     db.commit()
     db.close()
-    print("Carga completa de datos.")
-
 
 if __name__ == "__main__":
     run_all_table_loaders()
