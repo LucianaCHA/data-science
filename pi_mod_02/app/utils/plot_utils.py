@@ -97,27 +97,27 @@ def plot_histogram_with_outliers(
     color="#4C72B0",
 ):
     """
-    Grafica la distribución en forma de histograma.
+    Grafica un histograma con opción de mostrar la curva KDE.
+    Puede usarse para cualquier columna numérica.
 
     Parámetros:
     - df: DataFrame
+    - column: nombre de la columna numérica a graficar
     - bins: cantidad de bins del histograma (puede ser 'auto', un entero o lista)
     - title: título del gráfico
     - color: color del histograma
     """
-    if not {"OrdenID", "total_items"}.issubset(df.columns):
-        raise ValueError(
-            "El DataFrame debe contener las columnas 'OrdenID' y 'total_items'."
-        )
+
+    if column not in df.columns:
+        raise ValueError(f"La columna '{column}' no se encuentra en el DataFrame.")
+
+    data = df[column].dropna()
 
     plt.figure(figsize=(10, 6))
-    # plt.hist(df["total_items"], bins=bins, color=color, edgecolor="black")
-    sns.histplot(df[column], bins=bins, color=color, kde=True)
+    sns.histplot(data, bins=bins, color=color, kde=True)
     plt.title(title)
-    # plt.xlabel("Total de ítems por orden")
     plt.xlabel(label_x)
     plt.ylabel(label_y)
-    # plt.ylabel("Cantidad de órdenes")
     plt.grid(axis="y", linestyle="--", alpha=0.7)
     plt.tight_layout()
     plt.show()
@@ -211,7 +211,9 @@ def plot_bar_comparison(
 
     # Ordenar por la suma de ambas columnas para mejor visualización
     combined_df["total"] = combined_df[column1] + combined_df[column2]
-    combined_df = combined_df.sort_values(by="total", ascending=False).drop(columns="total")
+    combined_df = combined_df.sort_values(by="total", ascending=False).drop(
+        columns="total"
+    )
 
     # Graficar
     combined_df.plot(kind="bar", figsize=figsize, color=["steelblue", "orange"])

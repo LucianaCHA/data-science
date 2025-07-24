@@ -81,5 +81,5 @@ SQL_TO_PRODUCT_PAYMENT_HISTORY_MODEL = {
     "MetodoPagoID": "payment_method_id",
     "Monto": "amount",
     "FechaPago": "payment_date",
-    "EstadoPago": "payment_status",
+    "EstadoPago": "status",
 }

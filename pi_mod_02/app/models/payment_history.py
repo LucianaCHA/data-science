@@ -53,5 +53,5 @@ class PaymentHistory(BaseModel):
             payment_method_id=data.get("payment_method_id"),
             amount=Decimal(data.get("amount", 0)),
             date=data.get("date", datetime.datetime.now()),
-            status=data.get("status", "pending"),
+            status=data.get("status", "Procesando"),
         )
