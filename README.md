@@ -115,9 +115,9 @@ Ingresar el password o token '1234'
 
 Se disponibiliza un adminer en 
 
-http://localhost:8080/?pgsql=database&username=${MYSQL_USER}&db=ecommerce_db
+http://localhost:8080/?pgsql=database&username=${POSTGRES_USER}&db=ecommerce_db
 
-Segun lo definido para la env ${MYSQL_USER} 
+Segun lo definido para la env ${POSTGRES_USER} 
 
 ## Cómo conectarse a docker
 
@@ -129,7 +129,7 @@ Si por alguna razón se necesita conectarse al docker de este proyecto
 
 Están ubicadas en el archivo `.env.example`
 
-### `MYSQL_*`
+### `POSTGRES_*`
 - Utilizadas para la BD de `docker compose`
 
 **Nota** Se debe mantener el nombre de la base de datos como __ecommerce_db__ y las envs de los path tal cual se brindan en el archivo env_example
