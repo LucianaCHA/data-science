@@ -76,7 +76,8 @@ def show_orders_distrbution_chart():
 
     data_frame = postgres_utils.run_query(query)
 
-    notebook_utils.print_colored("Distribución de órdenes por monto total", "green")
+    notebook_utils.print_colored(
+        "Distribución de órdenes por monto total", "green")
     plot_utils.plot_histogram_with_outliers(
         df=data_frame,
         column="total_items",
@@ -117,9 +118,11 @@ def show_geographic_sales_distribution_chart():
     ORDER BY total_ordenes DESC;
     """
 
-    orders_distribution_df = postgres_utils.run_query(orders_distribution_query)
+    orders_distribution_df = postgres_utils.run_query(
+        orders_distribution_query)
 
-    notebook_utils.print_colored("Distribución de órdenes por provincia", "green")
+    notebook_utils.print_colored(
+        "Distribución de órdenes por provincia", "green")
     plot_utils.plot_top_bar_chart(
         df=orders_distribution_df,
         x_column="Provincia",
@@ -168,9 +171,11 @@ def show_sales_by_province():
     GROUP BY de."Provincia"
     ORDER BY volumen_ventas DESC;
     """
-    sales_distribution_query = postgres_utils.run_query(sales_distribution_query)
+    sales_distribution_query = postgres_utils.run_query(
+        sales_distribution_query)
 
-    notebook_utils.print_colored("Distribución de ventas por provincia", "green")
+    notebook_utils.print_colored(
+        "Distribución de ventas por provincia", "green")
     plot_utils.plot_top_bar_chart(
         df=sales_distribution_query,
         x_column="Provincia",
@@ -185,7 +190,7 @@ def show_sales_by_province():
 
 def show_cart_adding_items_chart():
     query = """
-    SELECT 
+    SELECT
         DATE_TRUNC('day', "FechaAgregado") AS semana,
         COUNT(*) AS total_agregados,
         SUM("Cantidad") AS cantidad_total
@@ -232,7 +237,8 @@ def show_cart_adding_items_chart():
     plt.xticks(ticks=range(0, len(xticks), 2), labels=xticks[::2], rotation=90)
 
     # Ajustes
-    plt.title("Tendencia diaria de productos agregados al carrito", fontsize=16)
+    plt.title(
+        "Tendencia diaria de productos agregados al carrito", fontsize=16)
     plt.xlabel("Fecha (Día)")
     plt.ylabel("Cantidad")
     plt.legend()
@@ -245,7 +251,7 @@ def show_cart_adding_items_chart():
 def show_most_sale_and_more_added():
 
     query = """
-    SELECT 
+    SELECT
         o."UsuarioID",
         SUM(o."Total") AS total_ventas
     FROM "Ordenes" o
@@ -296,7 +302,7 @@ def show_monthly_sales():
 
 def show_rating_bar_chart():
     query = """
-    SELECT 
+    SELECT
         p."ProductoID",
         p."Nombre",
         AVG(r."Calificacion") AS calificacion_promedio
@@ -307,7 +313,8 @@ def show_rating_bar_chart():
     LIMIT 10;
     """
 
-    notebook_utils.print_colored("Calificaciones promedio de productos", "green")
+    notebook_utils.print_colored(
+        "Calificaciones promedio de productos", "green")
     df_calificaciones = postgres_utils.run_query(query)
 
     plot_utils.plot_top_bar_chart(
