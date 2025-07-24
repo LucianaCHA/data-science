@@ -173,3 +173,35 @@ SELECT
 FROM "Ordenes"
 GROUP BY mes
 ORDER BY mes;
+
+
+-- Exploración DetalleOrdenes
+-- Número de ítems por orden
+SELECT
+    o."OrdenID",
+    COUNT(d."DetalleID") AS total_items
+FROM "Ordenes" o
+JOIN "DetalleOrdenes" d ON o."OrdenID" = d."OrdenID"
+GROUP BY o."OrdenID"
+ORDER BY total_items DESC
+LIMIT 10;
+
+-- promedio de items por orden
+SELECT
+    AVG(total_items) AS promedio_items_por_orden
+FROM (
+    SELECT
+        o."OrdenID",
+        COUNT(d."DetalleID") AS total_items
+    FROM "Ordenes" o
+    JOIN "DetalleOrdenes" d ON o."OrdenID" = d."OrdenID"
+    GROUP BY o."OrdenID"
+) subquery;
+
+-- Distribución de ítems por orden
+SELECT
+    "OrdenID",
+    SUM("Cantidad") AS total_items
+FROM "DetalleOrdenes"
+GROUP BY "OrdenID";
+

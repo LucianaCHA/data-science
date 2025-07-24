@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from app.utils import postgres_utils
+import pandas as pd
 
 
 def plot_boxplot_with_outliers(table, column, step=10, show_outlier_count=True):
@@ -86,6 +87,42 @@ def plot_top_bar_chart(
     plt.show()
 
 
+def plot_histogram_with_outliers(
+    df: pd.DataFrame,
+    column: str,
+    label_x: str = "x",
+    label_y: str = "y",
+    bins="auto",
+    title="Histograma",
+    color="#4C72B0",
+):
+    """
+    Grafica la distribución en forma de histograma.
+
+    Parámetros:
+    - df: DataFrame
+    - bins: cantidad de bins del histograma (puede ser 'auto', un entero o lista)
+    - title: título del gráfico
+    - color: color del histograma
+    """
+    if not {"OrdenID", "total_items"}.issubset(df.columns):
+        raise ValueError(
+            "El DataFrame debe contener las columnas 'OrdenID' y 'total_items'."
+        )
+
+    plt.figure(figsize=(10, 6))
+    # plt.hist(df["total_items"], bins=bins, color=color, edgecolor="black")
+    sns.histplot(df[column], bins=bins, color=color, kde=True)
+    plt.title(title)
+    # plt.xlabel("Total de ítems por orden")
+    plt.xlabel(label_x)
+    plt.ylabel(label_y)
+    # plt.ylabel("Cantidad de órdenes")
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.tight_layout()
+    plt.show()
+
+
 def plot_top_spenders(
     df,
     x_column: str,
@@ -144,5 +181,45 @@ def plot_high_stock_lowest_sells():
 
     plt.xlabel("Stock disponible")
     plt.title("Productos con alto stock y bajas ventas")
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_bar_comparison(
+    df1: pd.DataFrame,
+    df2: pd.DataFrame,
+    column1: str,
+    column2: str,
+    label1: str = "Label 1",
+    label2: str = "Label 2",
+    title: str = "Bar Comparison",
+    figsize=(12, 6),
+):
+    """
+    Plots a bar comparison between two DataFrames based on product names, even if they don't match.
+    """
+
+    if df1.empty and df2.empty:
+        return
+
+    # Usar "Nombre" como índice para ambos
+    df1 = df1.set_index("Nombre")
+    df2 = df2.set_index("Nombre")
+
+    # Unir ambos DataFrames por nombre de producto
+    combined_df = df1[[column1]].join(df2[[column2]], how="outer").fillna(0)
+
+    # Ordenar por la suma de ambas columnas para mejor visualización
+    combined_df["total"] = combined_df[column1] + combined_df[column2]
+    combined_df = combined_df.sort_values(by="total", ascending=False).drop(columns="total")
+
+    # Graficar
+    combined_df.plot(kind="bar", figsize=figsize, color=["steelblue", "orange"])
+
+    plt.title(title)
+    plt.xlabel("Producto")
+    plt.ylabel("Cantidad")
+    plt.xticks(rotation=45, ha="right")
+    plt.legend([label1, label2])
     plt.tight_layout()
     plt.show()
