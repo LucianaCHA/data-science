@@ -76,14 +76,13 @@ def show_orders_distrbution_chart():
 
     data_frame = postgres_utils.run_query(query)
 
-    notebook_utils.print_colored(
-        "Distribución de órdenes por monto total", "green")
+    notebook_utils.print_colored("Distribución de órdenes por monto total", "green")
     plot_utils.plot_histogram_with_outliers(
         df=data_frame,
         column="total_items",
         bins="auto",
         title="Distribución de órdenes por número de ítems",
-        color="blue",
+        color="salmon",
         label_x="Total de ítems por orden",
         label_y="Cantidad de órdenes",
     )
@@ -118,11 +117,9 @@ def show_geographic_sales_distribution_chart():
     ORDER BY total_ordenes DESC;
     """
 
-    orders_distribution_df = postgres_utils.run_query(
-        orders_distribution_query)
+    orders_distribution_df = postgres_utils.run_query(orders_distribution_query)
 
-    notebook_utils.print_colored(
-        "Distribución de órdenes por provincia", "green")
+    notebook_utils.print_colored("Distribución de órdenes por provincia", "green")
     plot_utils.plot_top_bar_chart(
         df=orders_distribution_df,
         x_column="Provincia",
@@ -154,7 +151,7 @@ def show_items_per_order_chart():
         column="total_items",
         bins="auto",
         title="Distribución de ítems por orden",
-        color="blue",
+        color="salmon",
         label_x="Total de ítems por orden",
         label_y="Cantidad de órdenes",
     )
@@ -171,11 +168,9 @@ def show_sales_by_province():
     GROUP BY de."Provincia"
     ORDER BY volumen_ventas DESC;
     """
-    sales_distribution_query = postgres_utils.run_query(
-        sales_distribution_query)
+    sales_distribution_query = postgres_utils.run_query(sales_distribution_query)
 
-    notebook_utils.print_colored(
-        "Distribución de ventas por provincia", "green")
+    notebook_utils.print_colored("Distribución de ventas por provincia", "green")
     plot_utils.plot_top_bar_chart(
         df=sales_distribution_query,
         x_column="Provincia",
@@ -237,8 +232,7 @@ def show_cart_adding_items_chart():
     plt.xticks(ticks=range(0, len(xticks), 2), labels=xticks[::2], rotation=90)
 
     # Ajustes
-    plt.title(
-        "Tendencia diaria de productos agregados al carrito", fontsize=16)
+    plt.title("Tendencia diaria de productos agregados al carrito", fontsize=16)
     plt.xlabel("Fecha (Día)")
     plt.ylabel("Cantidad")
     plt.legend()
@@ -249,32 +243,68 @@ def show_cart_adding_items_chart():
 
 
 def show_most_sale_and_more_added():
-
     query = """
     SELECT
-        o."UsuarioID",
-        SUM(o."Total") AS total_ventas
-    FROM "Ordenes" o
-    JOIN "Usuarios" u ON o."UsuarioID" = u."UsuarioID"
-    WHERE u."FechaRegistro" >= NOW() - INTERVAL '1 year'
-    GROUP BY o."UsuarioID"
-    ORDER BY total_ventas DESC
-    LIMIT 10;
+        p."ProductoID",
+        p."Nombre",
+        COALESCE(SUM(v."Cantidad"), 0) AS total_vendido,
+        COALESCE(SUM(c.total_agregado), 0) AS total_agregado
+    FROM "Productos" p
+    LEFT JOIN (
+        SELECT d."ProductoID", SUM(d."Cantidad") AS "Cantidad"
+        FROM "DetalleOrdenes" d
+        GROUP BY d."ProductoID"
+        ORDER BY SUM(d."Cantidad") DESC
+        LIMIT 10
+    ) v ON p."ProductoID" = v."ProductoID"
+    LEFT JOIN (
+        SELECT c."ProductoID", SUM(c."Cantidad") AS total_agregado
+        FROM "Carrito" c
+        GROUP BY c."ProductoID"
+        ORDER BY SUM(c."Cantidad") DESC
+        LIMIT 10
+    ) c ON p."ProductoID" = c."ProductoID"
+    WHERE v."ProductoID" IS NOT NULL OR c."ProductoID" IS NOT NULL
+    GROUP BY p."ProductoID", p."Nombre"
+    ORDER BY total_vendido DESC, total_agregado DESC;
     """
 
-    new_users_sales_df = postgres_utils.run_query(query)
+    sold_vs_cart = postgres_utils.run_query(query)
 
-    notebook_utils.print_colored("Ventas de nuevos usuarios", "green")
-    plot_utils.plot_top_bar_chart(
-        df=new_users_sales_df,
-        x_column="UsuarioID",
-        y_column="total_ventas",
-        plot_title="Ventas de nuevos usuarios",
-        x_label="Usuario ID",
-        y_label="Total Ventas",
-        top_n=10,
-        figsize=(10, 6),
+    notebook_utils.print_colored(
+        "Comparación de productos más vendidos vs más agregados al carrito", "green"
     )
+
+    # Preparar gráfico comparativo con matplotlib
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    df = sold_vs_cart
+    x = np.arange(len(df))  # posiciones en el eje X
+    width = 0.35  # ancho de barra
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    bars1 = ax.bar(
+        x - width / 2, df["total_vendido"], width, label="Vendidos", color="skyblue"
+    )
+    bars2 = ax.bar(
+        x + width / 2,
+        df["total_agregado"],
+        width,
+        label="Agregados al carrito",
+        color="salmon",
+    )
+
+    ax.set_xlabel("Producto")
+    ax.set_ylabel("Cantidad")
+    ax.set_title("Top productos vendidos vs agregados al carrito")
+    ax.set_xticks(x)
+    ax.set_xticklabels(df["Nombre"], rotation=45, ha="right")
+    ax.legend()
+    ax.grid(axis="y", linestyle="--", alpha=0.7)
+
+    plt.tight_layout()
+    plt.show()
 
 
 def show_monthly_sales():
@@ -313,8 +343,7 @@ def show_rating_bar_chart():
     LIMIT 10;
     """
 
-    notebook_utils.print_colored(
-        "Calificaciones promedio de productos", "green")
+    notebook_utils.print_colored("Calificaciones promedio de productos", "green")
     df_calificaciones = postgres_utils.run_query(query)
 
     plot_utils.plot_top_bar_chart(

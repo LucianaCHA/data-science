@@ -1,0 +1,23 @@
+models:
+  - name: stg_products
+    description: "Staging model for products, with cleaning and validation"
+    columns:
+      - name: product_name
+        description: "Name of the product"
+        tests:
+          - not_null
+          - unique
+    
+      - name: product_id
+        description: "Unique identifier for the product"
+        tests:
+          - not_null
+          - unique
+      - name: price
+        description: "Price of the product"
+        tests:
+          - not_null
+      - name: stock
+        description: "Stock quantity of the product"
+        tests:
+          - not_null

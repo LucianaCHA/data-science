@@ -1,0 +1,43 @@
+version: 2
+
+sources:
+  - name: public
+    tables:
+      - name: orders_detail
+        identifier: DetalleOrdenes
+
+models:
+  - name: stg_orders_detail
+    description: "Staging model for order details, with cleaning and validation"
+    columns:
+      - name: order_detail_id
+        description: "Unique identifier for the order_detail"
+        tests:
+          - not_null
+          - unique
+      - name: order_id
+        description: "Identifier for the order to which this detail belongs"
+        tests:
+          - not_null
+      - name: product_id
+        description: "Identifier for the product in the order detail"
+        tests:
+          - not_null
+      - name: quantity
+        description: "Quantity of the product in the order detail"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "quantity >= 0"
+      - name: unit_price
+        description: "Unit price of the product in the order detail"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "unit_price >= 0"
+      - name: total_price
+        description: "Total price for the order detail (quantity * unit_price)"
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: "total_price >= 0"

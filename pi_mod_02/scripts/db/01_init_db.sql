@@ -20,7 +20,8 @@ CREATE TABLE "Usuarios" (
 CREATE TABLE "Categorias" (
     "CategoriaID" SERIAL PRIMARY KEY,
     "Nombre" VARCHAR(100) NOT NULL,
-    "Descripcion" VARCHAR(255)
+    "Descripcion" VARCHAR(255),
+    CONSTRAINT unique_nombre UNIQUE ("Nombre")
 );
 
 -- Tabla: Productos
