@@ -1,0 +1,12 @@
+jupyter
+pandas
+numpy
+python-dotenv
+psycopg2-binary
+python-decouple
+sqlalchemy
+matplotlib 
+seaborn
+dbt-core 
+dbt-postgres
+marimo[recommended]

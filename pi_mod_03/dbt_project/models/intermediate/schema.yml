@@ -1,0 +1,7 @@
+models:
+  - name: int_shipping_addresses
+    description: "Direcciones con city_id ya asociado"
+    columns:
+      - name: city_id
+        tests:
+          - not_null
