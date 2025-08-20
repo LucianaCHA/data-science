@@ -33,7 +33,15 @@ echo "Ejecutando script de inicialización de base de datos..."
 python3 /app/app/loader/load_all.py
 
 
-echo "¡Holas! Iniciando Jupyter Notebook..."
-# jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --no-browser \
-#     --NotebookApp.token='1234' --NotebookApp.password='1234'
+# --- NUEVO BLOQUE: Exportar la app Marimo a HTML-WASM ---
+echo "🛠️ Exportando notebook Marimo a HTML interactivo..."
+marimo export html-wasm marimo/notebooks/notebook.py -o /app/docs --mode run
+
+# Agregar .nojekyll automáticamente
+touch /app/docs/.nojekyll
+
+echo "✅ Exportación completa. Archivos listos en /app/docs"
+
+# --- OPCIONAL: arrancar Marimo como servidor (si querés usarlo en tiempo real) ---
+# echo "📡 Iniciando Marimo en modo servidor..."
 marimo run marimo/notebooks/notebook.py --host 0.0.0.0 --port 8888
