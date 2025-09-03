@@ -2,21 +2,19 @@
 
 ## Resumen
 
-Las entregas solicitadas se presentan en notebooks en el directorio [`delivery`](./project/delivery/) :
+Las entregas solicitadas se presentan en el directorio [`delivery`](./project/delivery/) :
 
-* Entrega 1 - Por cuestiones de lectura y organización se presenta en tres secciones (archivos) 
+* Entrega 1 - 
 
-   1 .[`Consigna 1a `](/pi_mod_02/delivery/01-first-delivery/1st_delivery_intro.ipynb): Desarrollo de consignas de configuración y preparación de entorno.
+   1 .[`Documento técnico `](/pi_mod_03/delivery/01-first-delivery/tech-document.md): Se brinda documento técnico requerido incluyendo diagrama de arquitectura, stack tecnológico.
 
-   2.[`Consigna 1b `](/pi_mod_02/delivery/01-first-delivery/1st_delivery.ipynb): Desarrollo de consignas relacionadas a exploración de la base de datos, con análisis, queries y tablsa que buscan conocer las tablas y proponer mejoras
-
-   3.[`Reporte Técnico`](/pi_mod_02/delivery/01-first-delivery/1st_tech_report.ipynb) Reporte Técnico , con las conclusiones y visualizaciones tras exploración.
+   2.[`Roadmap `](/pi_mod_03/delivery/01-first-delivery/roadmap.md): Propuesta de pasos de desarrollo de la propuesta técnica
 
 * Entrega 2 - 
-   1. [`Modelo conceptual y lógico`](/pi_mod_02/delivery/02-second-delivery/2nd_delivery.ipynb) : Definición de hechos y dimensiones según la metodología Kimball en base a los hallazgos de la entrega 1. Se completa propuesta de modelo conceptual y lógico.
+   1.
 
 * Entrega 3 - 
-   1. [`Modelo físco con DBT`](/pi_mod_02/delivery/03-third-delivery/3rd_delivery.ipynb)
+   1. 
 
 ## Detalles del Proyecto
 
@@ -27,8 +25,8 @@ Este proyecto fue desarrollado dentro de un **entorno Dockerizado**, para facili
 
 2. **ADminer** Se utilizó Adminer como una herramienta web para la administración de bases de datos. Este contenedor facilita la interacción con la base de datos MySQL a través de una interfaz gráfica. Expuesto en puerto 8080
 
-3. **Proyecto Integrador**:
-El proyecto en sí mismo también está dockerizado. Se utilizó un contenedor basado en Python 3.11 que ejecuta el código y los notebooks del proyecto. Estos están disponibles en el puerto 8888 para realizar consultas interactivas y revisar  resultados.
+3. **Pi_mod_03**:
+El proyecto en sí mismo también está dockerizado. Se utilizó un contenedor basado en Python 3.11 que ejecuta el código preparado para su ejecuión en google cloud o en entorno local.
 
 ## Requerimientos para levantar el proyecto localmente
 
@@ -50,21 +48,13 @@ El proyecto en sí mismo también está dockerizado. Se utilizó un contenedor b
  - `dbt_project/` - Proyecto DBT para transformación de datos
  - `delivery/` - Directorio que contiene los requerimientos de cada avance
    - 01-delivery (primer entrega)
-      - [`Instalación y entorno`](/pi_mod_02/delivery/01-first-delivery/1st_delivery_intro.ipynb)
-      - [`Exploración`](/pi_mod_02/delivery/01-first-delivery/1st_delivery_intro.ipynb)
-      - [`Informe técnico`](/pi_mod_02/delivery/01-first-delivery/1st_delivery_intro.ipynb)
    - 02-delivery (segunda entrega)
-      - [`Modelo conceptual y lógico`](/pi_mod_02/delivery/02-second-delivery/2nd_delivery.ipynb)
    - 03-delivery (tercer entrega)
-      - [`Modelo físico con DBT`](/pi_mod_02/delivery/03-third-delivery/3rd_delivery.ipynb)
  - `scripts/` - Scripts de inicialización y gestión del proyecto
    - `db/` 
       - `data/` - incluye los sql para popular tablas
          - [`01_init__db.sql/`](/pi_mod_02/scripts/db/01_init_db.sql) - Script para vrea base de datos.
          - [`init.sh/`](./project/scripts/init.sh) - Inicializa proyecto, docker , instalación de dependencias , base de datos, etc.
-
-      - `sql/`
-         - [`Anexo queries`](/pi_mod_02/scripts/sql/report.sql)
  - `requirements.txt/` 
 
 
@@ -103,14 +93,6 @@ Para eliminar imágenes [con la opción -v, se borran todas las actualizaciones 
 docker compose -p project down [-v]
 ```
 
-###  Acceso a Jupyter Notebook
-
-Una vez que el contenedor esté corriendo, se puede acceder a Jupyter Notebook desde el navegador:
-
-- **Puerto por defecto (8888)**: http://localhost:8888
-
-Ingresar el password o token '1234'
-
 ## Adminer:
 
 Se disponibiliza un adminer en 
@@ -133,3 +115,6 @@ Están ubicadas en el archivo `.env.example`
 - Utilizadas para la BD de `docker compose`
 
 **Nota** Se debe mantener el nombre de la base de datos como __ecommerce_db__ y las envs de los path tal cual se brindan en el archivo env_example
+
+
+# Instrucciones despliegue en GCloud

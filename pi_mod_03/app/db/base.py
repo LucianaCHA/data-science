@@ -9,14 +9,14 @@ class BaseModel(Base):
     @classmethod
     def from_dict(cls, data: dict):
         """
-        Creates an instance of the model from a dictionary.
+        Create an instance of the model from a dictionary.
         """
         return cls(**data)
 
     @classmethod
     def save_to_db(cls, db_session, data: dict):
         """
-        Saves an instance of the model to the database.
+        Saves a model instance to the database.
         """
         instance = cls.from_dict(data)
         db_session.add(instance)
