@@ -1,0 +1,25 @@
+# Utilizamos una imagen base ligera de Python 3.11
+FROM python:3.11-slim
+
+LABEL maintainer="lucianachamorro87@gmail.com"
+
+# Establecer el directorio de trabajo
+WORKDIR /app
+ENV PYTHONPATH="/app" 
+
+# Copiar el archivo de dependencias y ejecutarlas
+COPY pi_mod_03/requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar el script de inicialización
+COPY pi_mod_03/scripts/init.sh /init.sh
+RUN chmod +x /init.sh
+# RUN chmod +x run_data_loader.sh
+
+
+# Copiar el código fuente de la aplicación al contenedor
+COPY pi_mod_03 /app
+
+# Definir el comando de inicio: ejecuta el script de inicialización
+ENTRYPOINT ["bash", "/init.sh"]
