@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: publecommerce_dbic
+    database: "ecommerce_db"
+    schema: public
+    description: "Source for the ecommerce database"
+    tables:
+      - name: products
+        identifier: Productos
+      - name: users
+        identifier: Usuarios
+      - name: categories
+        identifier: Categorias
+      - name: orders
+        identifier: Ordenes
+      - name: orders_detail
+        identifier: DetalleOrdenes

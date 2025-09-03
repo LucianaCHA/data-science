@@ -11,5 +11,6 @@ class Settings(BaseModel):
     DB_PASSWORD: str = os.getenv("DB_PASSWORD", "lu")
     DB_URL: str = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
+
     DBT_PROJECT_DIR: str = os.getenv("DBT_PROJECT_PATH", "/")
     DBT_PROFILES_DIR: str = os.getenv("DBT_PROFILES_DIR", "/dbt_project/")
