@@ -20,5 +20,8 @@ pi_mod_01/data/*
 !pi_mod_01/data/*.keep
 pi_mod_02/scripts/db/data/*
 !pi_mod_02/scripts/db/data/*.keep
-
+pi_mod_03/scripts/db/data/*
+!pi_mod_03/scripts/db/data/*.keep
+pi_mod_03/app/raw/data/*
+!pi_mod_03/app/raw/data/*.keep
 apuntes.txt
