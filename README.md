@@ -11,10 +11,10 @@ Las entregas solicitadas se presentan en el directorio [`delivery`](./project/de
    2.[`Roadmap `](/pi_mod_03/delivery/01-first-delivery/roadmap.md): Propuesta de pasos de desarrollo de la propuesta técnica
 
 * Entrega 2 - 
-   1.
+   1. [`Documento técnico`](/pi_mod_03/delivery/02-second-delivery/2nd_delivery.md): Informe de pipeline implementado para capa raw con acceso a imagen desplegada e instrucciones para su uso en google cloud.
 
 * Entrega 3 - 
-   1. 
+   1.  [`Documento técnico`](/pi_mod_03/delivery/03-third-delivery/3rd_delivery.md): Informe de pipeline implementado para capa raw con acceso a imagen desplegada e instrucciones para su uso en google cloud.
 
 ## Detalles del Proyecto
 
@@ -114,7 +114,7 @@ Están ubicadas en el archivo `.env.example`
 ### `POSTGRES_*`
 - Utilizadas para la BD de `docker compose`
 
-**Nota** Se debe mantener el nombre de la base de datos como __ecommerce_db__ y las envs de los path tal cual se brindan en el archivo env_example
+**Nota** Se debe mantener el nombre de la base de datos como __airbnb-db__ y las envs de los path tal cual se brindan en el archivo env_example
 
 
 # Instrucciones despliegue en GCloud
