@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 settings = Settings()
-REPORTS_PREFIX = "reports_html/"
+REPORTS_PREFIX = "analitics_reports_html/"
 gcs_service = GCSService(bucket_name=settings.GCS_BUCKET)
 
 
