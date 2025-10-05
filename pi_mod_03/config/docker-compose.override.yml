@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:latest
+    container_name: database
+    restart: always
+    env_file: .env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - database_data:/var/lib/postgresql/data
+    tty: true
+
+  project:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: project
+    env_file: .env
+    command: ["/main.sh"]
+    ports:
+      - "8888:8888"
+    tty: true
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  database_data:

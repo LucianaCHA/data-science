@@ -1,0 +1,211 @@
+¿Cómo funciona DBT con la base de datos?
+1. DBT traduce los modelos (.sql) a una consulta SQL final
+Por ejemplo, el modelo stg_orders.sql que escribiste se convierte en una consulta CREATE TABLE AS SELECT ... o CREATE VIEW AS SELECT ....
+
+2. DBT ejecuta esa consulta sobre tu base de datos
+Si estás usando materialized: table → crea una nueva tabla física con los resultados del modelo.
+
+Si usás materialized: view → crea una vista (consulta virtual que se ejecuta al momento de uso).
+
+Si usás materialized: ephemeral → no se guarda nada en la base; DBT inyecta el código SQL directamente en modelos que lo usan.
+
+
+ ¿Dónde se guarda el resultado?
+Supongamos que tu stg_orders está en el esquema dbt_luciana.staging.
+
+Si tenés esta configuración en tu modelo:
+
+yml
+Copiar
+Editar
+models:
+  staging:
+    materialized: table
+Entonces, cuando corrés dbt run, DBT va a generar algo como:
+
+sql
+Copiar
+Editar
+create table dbt_luciana.stg_orders as
+with source as (...) ...
+select * from validated
+Ese resultado se guarda como una tabla real en tu base de datos.
+
+🧪 ¿Y los tests? ¿Se guardan?
+Los tests (not_null, unique, accepted_values, etc.):
+
+Se ejecutan como consultas SELECT con condiciones de error.
+
+Si encuentran registros inválidos, falla el test.
+
+No modifican ni guardan nada en la base de datos.
+
+| Elemento DBT              | ¿Se guarda en base?                    | ¿Cómo se usa?                           |
+| ------------------------- | -------------------------------------- | --------------------------------------- |
+| `materialized: table`     | ✅ Tabla física                         | Crea una tabla con los datos procesados |
+| `materialized: view`      | ✅ Vista lógica                         | Se consulta en tiempo real              |
+| `materialized: ephemeral` | ❌ No se guarda                         | Código se "inyecta" en otros modelos    |
+| Tests (`yml`)             | ❌ No se guarda                         | Se ejecutan como `SELECT` para validar  |
+| Validaciones en SQL       | ✅ Si están en modelos `table` o `view` | Parte del modelo guardado o consultado  |
+
+
+
+DBT no ejecuta SQL directamente. Primero renderiza los archivos .sql usando Jinja, y luego ejecuta el resultado como una consulta SQL sobre tu base de datos.
+
+Flujo de trabajo:
+
+Se escribe SQL con bloques de Jinja ({{ ... }}, {% ... %}).
+
+DBT pasa ese archivo por el motor de Jinja → genera SQL plano.
+
+El SQL plano se ejecuta contra la base de datos.
+
+Jinja en DBT permite:
+Incluir variables:
+
+sql
+Copiar
+Editar
+select * from {{ ref('stg_orders') }}
+Usar macros:
+
+sql
+Copiar
+Editar
+{{ is_positive('"Total"') }}
+Control de flujo (condicionales o bucles):
+
+sql
+Copiar
+Editar
+{% if target.name == 'prod' %}
+  where status = 'active'
+{% endif %}
+Setear variables temporales:
+
+sql
+Copiar
+Editar
+{% set threshold = 100 %}
+select * from orders where total > {{ threshold }}
+DBT aprovecha todo esto para escribir menos código, más flexible y más legible.
+
+¿Cómo se mezcla con SQL?
+Jinja genera el SQL como si fuera texto. Vos estás escribiendo algo que parece un script SQL con funciones, pero DBT lo ve así:
+
+sql
+Copiar
+Editar
+-- archivo .sql
+select * from {{ ref('stg_orders') }}
+Se transforma en:
+
+sql
+Copiar
+Editar
+-- SQL real que DBT ejecuta
+select * from "db_schema"."stg_orders"
+O si usás un macro como este:
+
+sql
+Copiar
+Editar
+{{ is_positive('"Total"') }}
+DBT reemplaza por:
+
+sql
+Copiar
+Editar
+case when "Total" is not null and "Total" > 0 then true else false end
+🌍 ¿Se usa Jinja fuera de DBT para trabajar con bases de datos?
+Sí, aunque DBT es el uso más popular hoy en ese contexto. Algunos ejemplos fuera de DBT:
+
+1. Python scripts con Jinja para generar SQL dinámico
+Si escribís scripts en Python para ejecutar SQL, podés usar Jinja para generar queries dinámicamente:
+
+python
+Copiar
+Editar
+from jinja2 import Template
+
+template = Template("""
+    SELECT * FROM orders
+    {% if status %}
+    WHERE status = '{{ status }}'
+    {% endif %}
+""")
+
+query = template.render(status='completed')
+Esto es útil cuando querés generar SQL parametrizado y flexible, sin usar ORM.
+
+2. Herramientas de reportes o ETL personalizadas
+Algunos pipelines personalizados de ETL (con Airflow, Luigi o scripts puros) usan Jinja para armar consultas, logs o scripts SQL.
+
+3. Herramientas de BI o dashboards
+Algunas herramientas de BI permiten usar templates con Jinja o similar para crear queries más flexibles según el usuario (por ejemplo, en Superset o Metabase avanzada con jinja_sql).
+
+4. Infraestructura como código (IaC)
+Herramientas como Ansible usan Jinja para templado de configuraciones (YAML, JSON, etc.), pero eso ya es más general.
+
+| Concepto       | En qué ayuda                                                                       |
+| -------------- | ---------------------------------------------------------------------------------- |
+| **Jinja**      | Motor de plantillas para generar texto (como SQL, HTML, YAML) dinámico             |
+| **En DBT**     | Usado para escribir SQL dinámico, reutilizable y parametrizable                    |
+| **Macros**     | Funciones definidas con Jinja que generan fragmentos de SQL                        |
+| **Otros usos** | Generar SQL dinámico en Python, dashboards, reportes o herramientas personalizadas |
+
+
+
+vista materializada dbt 
+
+✅ Sí se guardan en la base, como una vista (view)
+
+🧠 Se recomputan cada vez que los usás en otro modelo
+
+🧹 No ocupan espacio físico de datos persistidos (solo definen la lógica)
+
+
+
+
+STAGGING 
+
+INTERMEDIATE 
+
+Extraer desde el staging:
+
+IDs únicos para cada nivel de la jerarquía geográfica, y preparar las columnas necesarias para construir las dimensiones..
+
+
+1. Ejecutar los modelos DBT
+Corres dbt run para que se creen (o actualicen) físicamente las tablas o vistas en la base de datos según tus modelos staging, intermedios y marts.
+
+2. Validar la calidad y consistencia
+Ejecutar los tests (dbt test) que definiste en tus modelos para asegurarte que los datos cumplen con las reglas de integridad, unicidad, valores aceptados, no nulos, etc.
+
+3. Documentar el modelo
+Generar documentación (dbt docs generate) y visualizarla (dbt docs serve) para que el equipo conozca las tablas, columnas, relaciones y definiciones.
+
+4. Optimizar
+Revisar el desempeño de las consultas sobre las tablas marts.
+
+En bases que lo soporten, pensar en materializar tablas (materialized views), índices o particiones para mejorar velocidad.
+
+5. Consumir los marts
+Integrar con herramientas de BI o analistas que consultarán estas tablas para obtener insights.
+
+Si usan notebooks, queries directas o dashboards, ahora tienen un modelo dimensional limpio y optimizado para análisis.
+
+6. Mantener y evolucionar
+A medida que llegan nuevos requerimientos o datos, iterar el modelo: agregar nuevas dimensiones, métricas o corregir detalles.
+
+Mantener el control de versiones de DBT, hacer revisiones y mantener la calidad con tests y documentación.
+
+
+| Paso                     | Qué hacer                               |
+| ------------------------ | --------------------------------------- |
+| 1. Ejecutar modelos      | `dbt run`                               |
+| 2. Validar datos         | `dbt test`                              |
+| 3. Documentar            | `dbt docs generate` + `dbt docs serve`  |
+| 4. Optimizar performance | Materializaciones, índices, particiones |
+| 5. Consumir datos        | BI, análisis, dashboards                |
+| 6. Mantener modelo       | Mejoras, nuevos requerimientos          |
