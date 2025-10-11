@@ -1,0 +1,20 @@
+{
+  "name": "S3-lucianacha-pi-mod4",
+  "workspaceId": "dd5fe066-abab-4d01-9cc0-00f2932e4ffb",
+  "definitionId": "4816b78f-1489-44c1-9060-4b19d5fa9362",
+  "configuration": {
+    "s3_bucket_region": "us-east-1",
+    "format": {
+      "format_type": "Parquet",
+      "page_size_kb": 1024,
+      "block_size_mb": 128,
+      "compression_codec": "SNAPPY",
+      "max_padding_size_mb": 8,
+      "dictionary_page_size_kb": 1024
+    },
+    "access_key_id": "******",
+    "s3_bucket_name": "lucianacha-pi-mod4",
+    "s3_bucket_path": "raw/external_data/",
+    "secret_access_key": "******"
+  }
+}
