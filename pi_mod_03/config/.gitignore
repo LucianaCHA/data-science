@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+.env
+*.ipynb_checkpoints/
+!pi_mod_02/.ipynb_checkpoints/
+*.log
+*.sqlite
+.DS_Store
+.vscode/
+*.idea/
+# Docker
+*.projectd
+*.tar
+*.sock
+*.img
+*.container
+
+
+pi_mod_01/data/*
+!pi_mod_01/data/*.keep
+pi_mod_02/scripts/db/data/*
+!pi_mod_02/scripts/db/data/*.keep
+pi_mod_03/scripts/db/data/*
+!pi_mod_03/scripts/db/data/*.keep
+pi_mod_03/app/raw/data/*
+!pi_mod_03/app/raw/data/*.keep
+apuntes.txt
