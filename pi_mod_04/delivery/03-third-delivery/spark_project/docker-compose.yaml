@@ -1,0 +1,13 @@
+
+services:
+  spark:
+    build: .
+    container_name: spark
+    ports:
+      - "4040:4040" 
+      - "7077:7077"  
+    volumes:
+      - ./app:/app
+    environment:
+      - AWS_REGION=us-east-1
+    command: ["/bin/bash", "/app/scripts/run_jobs.sh"]

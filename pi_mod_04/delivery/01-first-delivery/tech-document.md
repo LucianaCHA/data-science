@@ -132,12 +132,12 @@ s3://lucianacha-pi-mod4/
         ├── external/
         │   ├── traffic_api/
         │   └── weather_api/
-        │       └── city=patagonia/
-        │           └── year=2025/month=10/day=01/
-        |               └── patagonia_wheather.json
-        │       └── city=rioacha/
-        │           └── year=2025/month=10/day=01/
-        |               └── riohacha_wheather.json
+        |       ├── forecast/         <-- proceso de Airbyte diario
+        │              └── city
+        |                   └── city=xxx/year=YYYY/month=MM/day=DD/...
+        |       └── historical/
+        |           └── city
+        |                 └── city=xxx/year=YYYY/month=MM/day=DD/...
         │
         └── metadata/
                 ├── ingestion_logs/

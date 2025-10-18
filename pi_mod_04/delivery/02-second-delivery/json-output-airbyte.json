@@ -1,6 +1,6 @@
 {
   "name": "S3-lucianacha-pi-mod4",
-  "workspaceId": "dd5fe066-abab-4d01-9cc0-00f2932e4ffb",
+  "workspaceId": "32813d9b-690f-4fa3-967f-92f9558c2537",
   "definitionId": "4816b78f-1489-44c1-9060-4b19d5fa9362",
   "configuration": {
     "s3_bucket_region": "us-east-1",
@@ -12,9 +12,10 @@
       "max_padding_size_mb": 8,
       "dictionary_page_size_kb": 1024
     },
+    "role_arn": "arn:aws:iam::101248947689:user/airbyte",
     "access_key_id": "******",
     "s3_bucket_name": "lucianacha-pi-mod4",
-    "s3_bucket_path": "raw/external_data/",
+    "s3_bucket_path": "raw/external_data/weather_api",
     "secret_access_key": "******"
   }
 }
