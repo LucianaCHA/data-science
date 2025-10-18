@@ -1,0 +1,254 @@
+version: 7.3.6
+
+type: DeclarativeSource
+
+check:
+  type: CheckStream
+  stream_names:
+    - patagonia
+
+streams:
+  - type: DeclarativeStream
+    name: patagonia
+    retriever:
+      type: SimpleRetriever
+      decoder:
+        type: JsonDecoder
+      requester:
+        type: HttpRequester
+        url: https://api.openweathermap.org/data/2.5/forecast
+        use_cache: true
+        http_method: GET
+        request_parameters:
+          cnt: "8"
+          lat: "-38.6969"
+          lon: "-62.2174"
+          appid: 68b9e29da110ed8518d3cc55830008cd
+          units: metric
+      record_selector:
+        type: RecordSelector
+        extractor:
+          type: DpathExtractor
+          field_path: []
+    schema_loader:
+      type: InlineSchemaLoader
+      schema:
+        type: object
+        $schema: http://json-schema.org/schema#
+        properties:
+          cnt:
+            type:
+              - number
+              - "null"
+          cod:
+            type:
+              - string
+              - "null"
+          city:
+            type:
+              - object
+              - "null"
+            properties:
+              id:
+                type:
+                  - number
+                  - "null"
+              name:
+                type:
+                  - string
+                  - "null"
+              coord:
+                type:
+                  - object
+                  - "null"
+                properties:
+                  lat:
+                    type:
+                      - number
+                      - "null"
+                  lon:
+                    type:
+                      - number
+                      - "null"
+              sunset:
+                type:
+                  - number
+                  - "null"
+              country:
+                type:
+                  - string
+                  - "null"
+              sunrise:
+                type:
+                  - number
+                  - "null"
+              timezone:
+                type:
+                  - number
+                  - "null"
+              population:
+                type:
+                  - number
+                  - "null"
+          list:
+            type:
+              - array
+              - "null"
+            items:
+              type:
+                - object
+                - "null"
+              properties:
+                dt:
+                  type:
+                    - number
+                    - "null"
+                pop:
+                  type:
+                    - number
+                    - "null"
+                sys:
+                  type:
+                    - object
+                    - "null"
+                  properties:
+                    pod:
+                      type:
+                        - string
+                        - "null"
+                main:
+                  type:
+                    - object
+                    - "null"
+                  properties:
+                    temp:
+                      type:
+                        - number
+                        - "null"
+                    temp_kf:
+                      type:
+                        - number
+                        - "null"
+                    humidity:
+                      type:
+                        - number
+                        - "null"
+                    pressure:
+                      type:
+                        - number
+                        - "null"
+                    temp_max:
+                      type:
+                        - number
+                        - "null"
+                    temp_min:
+                      type:
+                        - number
+                        - "null"
+                    sea_level:
+                      type:
+                        - number
+                        - "null"
+                    feels_like:
+                      type:
+                        - number
+                        - "null"
+                    grnd_level:
+                      type:
+                        - number
+                        - "null"
+                wind:
+                  type:
+                    - object
+                    - "null"
+                  properties:
+                    deg:
+                      type:
+                        - number
+                        - "null"
+                    gust:
+                      type:
+                        - number
+                        - "null"
+                    speed:
+                      type:
+                        - number
+                        - "null"
+                clouds:
+                  type:
+                    - object
+                    - "null"
+                  properties:
+                    all:
+                      type:
+                        - number
+                        - "null"
+                dt_txt:
+                  type:
+                    - string
+                    - "null"
+                weather:
+                  type:
+                    - array
+                    - "null"
+                  items:
+                    type:
+                      - object
+                      - "null"
+                    properties:
+                      description:
+                        type:
+                          - string
+                          - "null"
+                      id:
+                        type:
+                          - number
+                          - "null"
+                      icon:
+                        type:
+                          - string
+                          - "null"
+                      main:
+                        type:
+                          - string
+                          - "null"
+                visibility:
+                  type:
+                    - number
+                    - "null"
+          message:
+            type:
+              - number
+              - "null"
+        additionalProperties: true
+
+spec:
+  type: Spec
+  connection_specification:
+    type: object
+    $schema: http://json-schema.org/draft-07/schema#
+    required: []
+    properties: {}
+    additionalProperties: true
+
+metadata:
+  assist:
+    openapiSpecUrl: >-
+      https://api.open-meteo.com/v1/forecast?latitude=-34.6131&longitude=-58.3772&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,snowfall,wind_speed_80m&current=temperature_2m
+  testedStreams:
+    weather_api:
+      isStale: false
+      hasRecords: true
+      streamHash: d4c2920a468119465083e0bfbcc14a292443b0ed
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+    patagonia:
+      streamHash: c67ea2b47cbfcdbd34c55813e788b369451453cf
+  autoImportSchema:
+    weather_api: true
+
+concurrency_level:
+  type: ConcurrencyLevel
+  default_concurrency: 1
