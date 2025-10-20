@@ -1,0 +1,54 @@
+name: CI/CD Pipeline
+
+# Este workflow se ejecutará cuando se haga un push en la rama main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Paso 1: Checkout del código
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Paso 2: Configuración de Docker Buildx (permite crear imágenes multi-plataforma)
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    # Paso 3: Cache de capas de Docker para acelerar futuras construcciones
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    # Paso 4: Construcción y ejecución de Docker
+    - name: Build and push Docker image
+      run: |
+        # Construir los contenedores usando Docker Compose
+        docker-compose up --build -d
+        # Mostrar logs para verificar que Airflow y demás servicios estén corriendo correctamente
+        docker-compose logs
+
+    # Paso 5: Verificar que Airflow esté corriendo
+    - name: Verify Airflow is running
+      run: |
+        # Verificamos si Airflow está corriendo mediante un simple curl
+        curl --fail http://localhost:8080 || (echo "Airflow no está corriendo" && exit 1)
+
+    # Paso 6: Ejecutar tests si los tienes (esto es opcional, si tienes pruebas para tu DAG o tu infraestructura)
+    - name: Run Airflow DAG tests (si los tienes configurados)
+      run: |
+        # Si tienes un script o tests definidos, puedes ejecutarlos aquí.
+        python -m unittest discover tests/ || (echo "Pruebas fallaron" && exit 1)
+
+    # Paso 7: Parar los contenedores después de la ejecución
+    - name: Shutdown Docker containers
+      run: |
+        docker-compose down
