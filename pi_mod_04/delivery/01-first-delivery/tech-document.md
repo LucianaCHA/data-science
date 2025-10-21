@@ -74,7 +74,10 @@ Se incluye el **diagrama de arquitectura** donde se representen las siguientes e
 - **Orquestación de flujos:** Apache Airflow.
 - **Automatización y control de versiones:** GitHub + GitHub Actions.
 - **Gobernanza y permisos:** AWS Lake Formation.
-![diagrama](app/assets/eltl_diagram.svg)
+
+![diagrama](/pi_mod_04/assets/eltl_diagram.svg)
+
+
 
 [`eltl_diagram`](./assets/eltl_diagram.svg)
 [Acceso online al diagrama para comentar](https://lucid.app/lucidchart/c91b55ea-7559-49a4-8571-d07b4a7a1002/edit?viewport_loc=-4931%2C-2203%2C3531%2C1317%2C0_0&invitationId=inv_8b2c5398-513b-442c-8c6a-c34ba0b6cdf3)
