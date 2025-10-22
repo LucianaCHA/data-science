@@ -2,7 +2,7 @@
 
 ### 1. **Descripción del pipeline ETLT**
 
-El pipeline de datos propuesto sigue un enfoque **ETLT (Extract, Load, Transform, Load)**, adaptado a una arquitectura de Data Lake moderna sobre Amazon Web Services (AWS). Este modelo permite la **ingesta inicial de datos desde múltiples fuentes**, su **almacenamiento en estado crudo (raw)** dentro de Amazon S3, y su posterior **procesamiento distribuido** mediante Apache Spark. Finalmente, los datos transformados son cargados en estructuras analíticas listas para ser consumidas por usuarios de negocio o herramientas de inteligencia de negocio.
+El pipeline de datos propuesto sigue un enfoque **ETLT (Extract, Transform, Load, Transform)**, adaptado a una arquitectura de Data Lake moderna sobre Amazon Web Services (AWS). Este modelo permite la **ingesta inicial de datos desde múltiples fuentes**, su **almacenamiento en estado crudo (raw)** dentro de Amazon S3, y su posterior **procesamiento distribuido** mediante Apache Spark. Finalmente, los datos transformados son cargados en estructuras analíticas listas para ser consumidas por usuarios de negocio o herramientas de inteligencia de negocio.
 
 Este diseño promueve una arquitectura **escalable, modular y gobernada**, capaz de adaptarse a nuevos casos de uso a medida que crece el volumen y la diversidad de los datos en la organización.
 
@@ -135,7 +135,7 @@ s3://lucianacha-pi-mod4/
         ├── external/
         │   ├── traffic_api/
         │   └── weather_api/
-        |       ├── forecast/         <-- proceso de Airbyte diario
+        |       ├── forecast/
         │              └── city
         |                   └── city=xxx/year=YYYY/month=MM/day=DD/...
         |       └── historical/
