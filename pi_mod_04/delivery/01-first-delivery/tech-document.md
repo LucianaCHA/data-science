@@ -2,7 +2,7 @@
 
 ### 1. **Descripción del pipeline ETLT**
 
-El pipeline de datos propuesto sigue un enfoque **ETLT (Extract, Load, Transform, Load)**, adaptado a una arquitectura de Data Lake moderna sobre Amazon Web Services (AWS). Este modelo permite la **ingesta inicial de datos desde múltiples fuentes**, su **almacenamiento en estado crudo (raw)** dentro de Amazon S3, y su posterior **procesamiento distribuido** mediante Apache Spark. Finalmente, los datos transformados son cargados en estructuras analíticas listas para ser consumidas por usuarios de negocio o herramientas de inteligencia de negocio.
+El pipeline de datos propuesto sigue un enfoque **ETLT (Extract, Transform, Load, Transform)**, adaptado a una arquitectura de Data Lake moderna sobre Amazon Web Services (AWS). Este modelo permite la **ingesta inicial de datos desde múltiples fuentes**, su **almacenamiento en estado crudo (raw)** dentro de Amazon S3, y su posterior **procesamiento distribuido** mediante Apache Spark. Finalmente, los datos transformados son cargados en estructuras analíticas listas para ser consumidas por usuarios de negocio o herramientas de inteligencia de negocio.
 
 Este diseño promueve una arquitectura **escalable, modular y gobernada**, capaz de adaptarse a nuevos casos de uso a medida que crece el volumen y la diversidad de los datos en la organización.
 
@@ -74,7 +74,10 @@ Se incluye el **diagrama de arquitectura** donde se representen las siguientes e
 - **Orquestación de flujos:** Apache Airflow.
 - **Automatización y control de versiones:** GitHub + GitHub Actions.
 - **Gobernanza y permisos:** AWS Lake Formation.
-![diagrama](app/assets/eltl_diagram.svg)
+
+![diagrama](/pi_mod_04/assets/eltl_diagram.svg)
+
+
 
 [`eltl_diagram`](./assets/eltl_diagram.svg)
 [Acceso online al diagrama para comentar](https://lucid.app/lucidchart/c91b55ea-7559-49a4-8571-d07b4a7a1002/edit?viewport_loc=-4931%2C-2203%2C3531%2C1317%2C0_0&invitationId=inv_8b2c5398-513b-442c-8c6a-c34ba0b6cdf3)
@@ -132,7 +135,7 @@ s3://lucianacha-pi-mod4/
         ├── external/
         │   ├── traffic_api/
         │   └── weather_api/
-        |       ├── forecast/         <-- proceso de Airbyte diario
+        |       ├── forecast/
         │              └── city
         |                   └── city=xxx/year=YYYY/month=MM/day=DD/...
         |       └── historical/
